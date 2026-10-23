@@ -26,7 +26,7 @@
 .api-page .tag-business{background:#fef3c7;color:#92400e}
 #keyModal .modal-panel{width:min(800px,calc(100vw - 32px))}
 #keyModal .model-options{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-#keyModal .model-option{min-height:104px;align-items:flex-start;padding:16px;cursor:pointer}
+#keyModal .model-option{height:80px;min-height:80px;box-sizing:border-box;align-items:center;padding:12px 16px;cursor:pointer}
 #keyModal .model-option input{accent-color:#84cc16;margin-right:6px}
 #keyModal .model-option small{display:inline-block;margin-top:7px;color:#64748b;line-height:1.5}
 #keyModal .model-option.selected{background:#f3fbdc}
