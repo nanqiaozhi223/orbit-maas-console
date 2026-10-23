@@ -1,0 +1,76 @@
+/* Product-wide text preference, including light and dark themes. */
+:root { --product-input-and-caption-text: #B4B8BD; }
+#overviewPage .title-row p,#logsPage .logs-title p,#recordsPage .logs-title p,#settingsPage .settings-title p{color:var(--product-input-and-caption-text)}
+
+/* Explicit priority overrides the existing theme and business-page colors. */
+input, textarea, select, select option,
+[contenteditable="true"],
+input::placeholder, textarea::placeholder {
+  color: var(--product-input-and-caption-text) !important;
+}
+input::placeholder, textarea::placeholder { opacity: 1; }
+
+/* Existing 13px typography roles; preserve their font sizes and weights. */
+.stat-value small,
+.modal-head p,
+.form-field label, .form-section h3,
+.danger-copy,
+.logs-table td, .log-tokens, .logs-pagination, .logs-total-label,
+.language-icon small,
+.api-page .api-head p, .api-page .api-note,
+.locked-model-item strong,
+.usage-title p, .usage-metric-label,
+.usage-table th, .usage-table td,
+.usage-chart-tooltip > strong,
+#overviewPage .quota-value .quota-used,
+#overviewPage .quota-value small,
+#overviewPage .quota-foot,
+#overviewPage .stat-value small,
+#overviewPage .stat-meta,
+#overviewPage .card-sub,
+#overviewPage .donut-center span,
+#overviewPage .legend-name small,
+#overviewPage .quota-main .used-pill,
+#overviewPage .announcement-copy small,
+#overviewPage .announcement-more,
+#overviewPage .quick .card-sub {
+  color: var(--product-input-and-caption-text) !important;
+}
+
+/* Only this annotated control expands; narrow containers cap its width. */
+#keyForm select[name="preference"] {
+  width: 366px;
+  max-width: 100%;
+}
+
+/* Dense operational lists use black text for quick scanning. */
+#logsPage .logs-table-card,
+#logsPage .logs-table-card th,
+#logsPage .logs-table-card td,
+#logsPage .logs-table-card small {
+  color: #000 !important;
+}
+
+#overviewPage .quota-main .used-pill,
+#overviewPage .quick .card-sub {
+  color: #000 !important;
+}
+
+/* The model metrics list remains high-contrast even though other 13px roles use the muted token. */
+#usagePage .usage-model-card, #dashboardPage .usage-model-card,
+#usagePage .usage-model-card .usage-section-head h2, #dashboardPage .usage-model-card .usage-section-head h2,
+#usagePage .usage-model-card .usage-section-head p, #dashboardPage .usage-model-card .usage-section-head p,
+#usagePage .usage-model-card .usage-table td, #dashboardPage .usage-model-card .usage-table td {
+  color: #000 !important;
+}
+
+#usagePage .usage-model-card .usage-table thead th, #dashboardPage .usage-model-card .usage-table thead th,
+#usagePage .usage-model-card .usage-table thead th button, #dashboardPage .usage-model-card .usage-table thead th button {
+  color: rgb(100, 116, 139) !important;
+}
+
+/* Annotated API Key field labels and section headings. */
+#keyForm > .form-grid > .form-field > label,
+#keyForm > .form-section > h3 {
+  color: #0F182A !important;
+}

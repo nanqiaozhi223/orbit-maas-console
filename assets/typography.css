@@ -1,0 +1,57 @@
+/* Unified type roles. This file intentionally contains typography properties only. */
+:root {
+  --type-family: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --type-title: 22px;
+  --type-section: 16px;
+  --type-body: 14px;
+  --type-caption: 13px;
+  --type-meta: 12px;
+}
+body, button, input, select, textarea { font-family: var(--type-family); }
+body { font-size: var(--type-body); line-height: 1.5; }
+
+/* Shared navigation */
+.sidebar .nav-item, .sidebar .nav-item span { font-size: var(--type-body); font-weight: 500; line-height: 1.4; }
+.sidebar .nav-item.active, .sidebar .nav-item[aria-current="page"],
+.sidebar .nav-item.active span, .sidebar .nav-item[aria-current="page"] span { font-weight: 600; }
+.sidebar .nav-title { font-size: var(--type-meta); font-weight: 500; line-height: 1.4; }
+.sidebar .user-meta strong { font-size: var(--type-body); font-weight: 500; }
+.sidebar .user-meta span { font-size: var(--type-meta); font-weight: 400; }
+
+/* Page and module headings */
+.title-row h1, .usage-title h1, .api-page .api-head h1, .logs-title h1, .settings-title h1 { font-size: var(--type-title); font-weight: 600; line-height: 1.35; }
+.title-row p, .usage-title p, .api-page .api-head p, .logs-title p, .settings-title p { font-size: var(--type-body); font-weight: 400; line-height: 1.5; }
+.card h2, .usage-section-head h2, .settings-section-head h2, .sessions-head h2 { font-size: var(--type-section); font-weight: 600; line-height: 1.35; }
+
+/* Overview and usage data hierarchy */
+.stat-label, .usage-metric-label { font-size: var(--type-body); font-weight: 500; line-height: 1.4; }
+.quota-value, .stat-value, .usage-metric strong, .donut-center strong { font-weight: 700; font-variant-numeric: tabular-nums; }
+.quota-value { font-size: 32px; }
+.stat-value, .usage-metric strong { font-size: 28px; }
+.card-sub, .stat-meta, .quota-foot, .usage-metric small, .usage-section-head p { font-size: var(--type-caption); font-weight: 400; line-height: 1.5; }
+.filterbar .field label, .control, .query, .usage-filter, .usage-filter select { font-size: var(--type-body); font-weight: 500; }
+.xlabels, .pill, .announcement-item time, .usage-chart svg text { font-size: var(--type-meta); font-weight: 400; }
+.announcement-copy strong { font-size: var(--type-body); font-weight: 600; line-height: 1.4; }
+.announcement-copy small { font-size: var(--type-caption); font-weight: 400; line-height: 1.5; }
+.quick h2 { font-size: 18px; font-weight: 600; line-height: 1.35; }
+.quick-action { font-size: var(--type-body); font-weight: 600; }
+
+/* Dense lists and filters */
+.api-table th, .logs-table th, .usage-table th { font-size: var(--type-meta); font-weight: 500; line-height: 1.4; }
+.api-table td, .logs-table td, .usage-table td { font-size: var(--type-caption); font-weight: 400; line-height: 1.5; }
+.logs-filter-row label, .logs-summary, .logs-pagination { font-size: var(--type-meta); font-weight: 400; }
+.log-metric strong { font-weight: 700; }
+.api-page .api-note, .api-page .api-head p, .api-page .api-table .route-note, .api-page .api-table .model-sub { font-size: var(--type-caption); font-weight: 400; line-height: 1.5; }
+
+/* Settings */
+.settings-page .profile-name { font-size: 24px; font-weight: 600; line-height: 1.35; }
+.settings-page .profile-name a { font-size: 14px; font-weight: 600; }
+.settings-page .profile-meta { margin-top: 14px; font-size: var(--type-caption); font-weight: 400; line-height: 1.5; }
+.settings-row strong, .security-card strong { font-size: var(--type-body); font-weight: 600; line-height: 1.4; }
+.settings-row p, .security-card small, .sessions-head p, .session-row p, .session-row small { font-size: var(--type-caption); font-weight: 400; line-height: 1.5; }
+.settings-row select, .settings-language .settings-section-head select { font-size: var(--type-body); font-weight: 400; }
+.session-row strong { font-size: var(--type-body); font-weight: 600; }
+.session-row em { font-size: var(--type-meta); font-weight: 500; }
+.settings-page .sessions-head .btn-light, .settings-page .session-row .btn-light { font-size: var(--type-body); font-weight: 500; line-height: 1.5; }
+.settings-page .settings-section-head p { font-size: var(--type-caption); font-weight: 400; line-height: 1.5; }
+.settings-page .session-row small { font-size: var(--type-meta); font-weight: 400; line-height: 1.5; }

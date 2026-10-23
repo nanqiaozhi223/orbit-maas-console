@@ -1,0 +1,101 @@
+/* Typography only: scoped to overview and the shared navigation. */
+:root {
+  --overview-font: Inter, "PingFang SC", "Microsoft YaHei", system-ui, sans-serif;
+  --overview-title-size: 22px;
+  --overview-section-size: 16px;
+  --overview-body-size: 14px;
+  --overview-caption-size: 13px;
+  --overview-time-size: 12px;
+  --overview-text-primary: #17191f;
+  --overview-text-secondary: #475569;
+  --overview-text-tertiary: #64748b;
+  --overview-text-disabled: #94a3b8;
+  --overview-text-brand: #365314;
+}
+:root[data-theme="dark"] {
+  --overview-text-primary: #f1f5f9;
+  --overview-text-secondary: #cbd5e1;
+  --overview-text-tertiary: #a8b5c8;
+  --overview-text-disabled: #94a3b8;
+  --overview-text-brand: #d9f99d;
+}
+#overviewPage, .sidebar {
+  font-family: var(--overview-font);
+}
+#overviewPage {
+  font-size: var(--overview-body-size);
+  font-weight: 400;
+  color: var(--overview-text-secondary);
+}
+.sidebar .nav-item, .sidebar .nav-item span {
+  font-family: var(--overview-font);
+  font-size: var(--overview-body-size);
+  font-weight: 500;
+  color: var(--overview-text-secondary);
+}
+.sidebar .nav-item.active, .sidebar .nav-item[aria-current="page"],
+.sidebar .nav-item.active span, .sidebar .nav-item[aria-current="page"] span {
+  font-weight: 600;
+  color: var(--overview-text-brand);
+}
+.sidebar .nav-title {
+  font-size: var(--overview-time-size);
+  font-weight: 500;
+  color: var(--overview-text-tertiary);
+}
+.sidebar .user-meta strong { font-size: var(--overview-body-size); font-weight: 500; color: var(--overview-text-secondary); }
+.sidebar .user-meta span { font-size: var(--overview-time-size); font-weight: 400; color: var(--overview-text-tertiary); }
+#overviewPage .title-row h1 {
+  font-size: var(--overview-title-size);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--overview-text-primary);
+}
+#overviewPage .title-row p { font-size: var(--overview-body-size); font-weight: 400; line-height: 1.5; color: var(--overview-text-secondary); }
+#overviewPage .card h2, #overviewPage .quota .stat-label {
+  font-size: var(--overview-section-size);
+  font-weight: 600;
+  line-height: 1.35;
+  color: var(--overview-text-primary);
+}
+#overviewPage .stat .stat-label { font-size: var(--overview-body-size); font-weight: 500; color: var(--overview-text-secondary); }
+#overviewPage .quota-value, #overviewPage .stat-value, #overviewPage .donut-center strong {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  color: var(--overview-text-primary);
+}
+#overviewPage .quota-value { font-size: 32px; }
+#overviewPage .stat-value, #overviewPage .donut-center strong { font-size: 28px; }
+#overviewPage .quota-value .quota-used, #overviewPage .quota-value small,
+#overviewPage .quota-foot, #overviewPage .stat-value small,
+#overviewPage .stat-meta, #overviewPage .card-sub,
+#overviewPage .donut-center span, #overviewPage .legend-name small {
+  font-size: var(--overview-caption-size);
+  font-weight: 400;
+  line-height: 1.5;
+  color: var(--overview-text-tertiary);
+}
+#overviewPage .field label, #overviewPage .control, #overviewPage .segmented button {
+  font-size: var(--overview-body-size);
+  font-weight: 500;
+  color: var(--overview-text-secondary);
+}
+#overviewPage .query { font-size: var(--overview-body-size); font-weight: 500; }
+#overviewPage .segmented button.active { color: #fff; }
+#overviewPage .quota-main .used-pill { font-size: var(--overview-caption-size); font-weight: 500; color: #365314; }
+#overviewPage .pill, #overviewPage .xlabels, #overviewPage .announcement-item time {
+  font-size: var(--overview-time-size);
+  font-weight: 400;
+  color: var(--overview-text-tertiary);
+  font-variant-numeric: tabular-nums;
+}
+#overviewPage .announcement-copy strong { font-size: var(--overview-body-size); font-weight: 600; line-height: 1.4; color: var(--overview-text-secondary); }
+#overviewPage .announcement-copy small { font-size: var(--overview-caption-size); font-weight: 400; line-height: 1.5; color: var(--overview-text-tertiary); }
+#overviewPage .announcement-more { font-size: var(--overview-caption-size); font-weight: 500; color: var(--overview-text-secondary); }
+#overviewPage .legend-name { font-size: var(--overview-body-size); font-weight: 500; color: var(--overview-text-secondary); }
+#overviewPage .legend-value { font-size: var(--overview-body-size); font-weight: 600; color: var(--overview-text-primary); font-variant-numeric: tabular-nums; }
+#overviewPage .quick h2 { font-size: 18px; font-weight: 600; line-height: 1.35; color: #17191f; }
+#overviewPage .quick .card-sub { font-size: var(--overview-caption-size); font-weight: 400; line-height: 1.5; color: #365314; }
+#overviewPage .quick-action { font-size: var(--overview-body-size); font-weight: 600; }
+#overviewPage .quick-action.primary-action { color: #fff; }
+#overviewPage .quick-action.ghost { color: #17191f; }
