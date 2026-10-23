@@ -100,3 +100,12 @@
 @media(max-width:900px){#usageLogPanel .logs-filter-row{grid-template-columns:repeat(2,minmax(0,1fr))}}
 
 @media(min-width:901px){.audit-filter-main{grid-template-columns:minmax(360px,1.55fr) minmax(190px,.8fr) minmax(220px,1fr) auto}}
+
+#usageLogPanel .logs-table thead th{font-size:13px}
+#auditLogPanel .audit-table thead th{font-size:13px;color:rgb(100,116,139)}
+
+#auditLogPanel .audit-range{display:block}
+#auditLogPanel .audit-range .logs-date-control{gap:8px}
+#auditLogPanel .audit-range .logs-date-control input{min-width:0;flex:1;color:var(--ui-text)}
+#auditLogPanel .audit-range .logs-date-control:focus-within{outline:2px solid var(--ui-brand-strong);outline-offset:3px}
+#auditLogPanel .audit-range-separator{flex:none;color:var(--ui-text);font-size:16px;font-weight:700}
