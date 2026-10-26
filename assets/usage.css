@@ -30,6 +30,8 @@
 .usage-date-control svg{width:17px;height:17px;flex:none;color:#afbfce}
 .usage-date-control input{width:0;min-width:0;flex:1;border:0;background:transparent;padding:0;box-shadow:none;font:inherit;color:var(--ui-text)}
 .usage-date-control:focus-within{outline:2px solid var(--ui-brand-strong);outline-offset:2px}
+#usagePage .usage-date-control.is-month{width:220px}
+#usagePage .usage-date-control.is-month input{width:100%;flex:1}
 :root[data-theme="dark"] .usage-date-control{border-color:#273043}
 @media(max-width:480px){.usage-filter{flex-wrap:wrap}.usage-date-control{width:100%}}
 .usage-ranking{display:grid;gap:12px;padding:20px 24px 10px}.usage-ranking-row{display:grid;grid-template-columns:150px minmax(0,1fr) 42px;align-items:center;gap:12px;font-size:12px}.usage-ranking-name{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.usage-ranking-track{height:9px;border-radius:99px;background:#e4e9ec;overflow:hidden}.usage-ranking-track i{display:block;height:100%;border-radius:99px}.usage-ranking-row strong{text-align:right;font-variant-numeric:tabular-nums}

@@ -45,7 +45,7 @@
 .pool-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 12px}
 .pool-item{display:flex;align-items:center;gap:10px;padding:11px 12px;border-bottom:1px solid #e2e8f0;cursor:pointer}
 .pool-item input{width:16px;height:16px;accent-color:#84cc16}.pool-item strong,.pool-item small{display:block}.pool-item small{color:#64748b;margin-top:3px;font-size:11px}
-.pool-valid{margin-top:14px;padding:10px 12px;border-radius:10px;background:#fff3e8;color:#b45309;font-size:12px}.pool-valid.invalid{background:#fff3e8;color:#b45309}
+.pool-valid{margin-top:14px;padding:10px 12px;border-radius:10px;background:#fff3e8;color:#b45309;font-size:12px;font-weight:400}.pool-valid.invalid{background:#fff3e8;color:#b45309}
 .locked-model-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 12px;padding:0 16px 8px;border:1px solid #dbe3d1;border-radius:14px;background:rgba(255,255,255,.55)}
 .locked-model-item{display:flex;align-items:center;gap:10px;min-width:0;padding:11px 12px;border-bottom:1px solid #e2e8f0;cursor:pointer}
 .locked-model-item:nth-last-child(-n+2){border-bottom:0}

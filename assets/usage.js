@@ -7,6 +7,32 @@
   usagePage.querySelector('#usageFilterBtn').before(userFilter);
   const userInput = userFilter.querySelector('input');
   const userMatches = userFilter.querySelector('.usage-user-matches');
+  const dateControl = usagePage.querySelector('.usage-date-control');
+  const initialDates = [...dateControl.querySelectorAll('input')].map(input => input.value);
+  let savedDates = initialDates;
+  let savedMonth = (initialDates[1] || initialDates[0] || new Date().toISOString().slice(0, 7)).slice(0, 7);
+  function syncDateControl(userScope) {
+    const inputs = [...dateControl.querySelectorAll('input')];
+    if (userScope === 'all') {
+      if (inputs.length === 2) savedDates = inputs.map(input => input.value);
+      dateControl.querySelector('span')?.remove();
+      dateControl.replaceChildren(dateControl.querySelector('svg'), Object.assign(document.createElement('input'), { type: 'month', value: savedMonth }));
+      dateControl.querySelector('input').setAttribute('aria-label', '统计月份');
+      dateControl.classList.add('is-month');
+      return;
+    }
+    if (inputs.length === 1) savedMonth = inputs[0].value;
+    const icon = dateControl.querySelector('svg');
+    const start = Object.assign(document.createElement('input'), { type: 'date', value: savedDates[0] || initialDates[0] });
+    const separator = document.createElement('span');
+    const end = Object.assign(document.createElement('input'), { type: 'date', value: savedDates[1] || initialDates[1] });
+    start.setAttribute('aria-label', '开始日期');
+    separator.textContent = '～';
+    separator.setAttribute('aria-hidden', 'true');
+    end.setAttribute('aria-label', '结束日期');
+    dateControl.replaceChildren(icon, start, separator, end);
+    dateControl.classList.remove('is-month');
+  }
   function availableUsers() {
     try {
       const saved = JSON.parse(localStorage.getItem('maas-users-demo'));
@@ -52,6 +78,7 @@
   });
   usagePage.querySelectorAll('[data-user-scope]').forEach(button => button.addEventListener('click', () => {
     usagePage.dataset.userScope = button.dataset.userScope;
+    syncDateControl(button.dataset.userScope);
     userFilter.hidden = button.dataset.userScope !== 'all';
     userInput.value = '';
     userMatches.hidden = true;

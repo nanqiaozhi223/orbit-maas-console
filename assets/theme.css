@@ -1,4 +1,5 @@
 .theme-toggle{position:relative}.theme-toggle .theme-icon{width:17px;height:17px}.theme-icon-light{display:none}
+.topbar>.notification-button{display:grid;flex:none}.notification-button svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
 .theme-toggle .theme-icon-light{display:none}
 :root[data-theme="dark"] .theme-icon-dark{display:none}:root[data-theme="dark"] .theme-icon-light{display:block}
 :root[data-theme="dark"] .usage-chart-tooltip{border-color:var(--ui-border)}
