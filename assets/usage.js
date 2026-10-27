@@ -3,6 +3,16 @@
   const usagePage = scope;
   usagePage.dataset.userScope = 'self';
   usagePage.querySelector('.usage-filter').insertAdjacentHTML('beforeend', '<div class="usage-user-filter" hidden><input type="search" aria-label="筛选用户名" placeholder="筛选用户名" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="usageUserMatches"><div id="usageUserMatches" class="usage-user-matches" role="listbox" hidden></div></div><div class="usage-chart-switch usage-user-scope" role="group" aria-label="用户范围"><button type="button" class="active" data-user-scope="self" aria-pressed="true">仅自己</button><button type="button" data-user-scope="all" aria-pressed="false">全部</button></div>');
+  const userScope = usagePage.querySelector('.usage-user-scope');
+  usagePage.querySelector('.usage-filter').prepend(userScope);
+  userScope.insertAdjacentHTML('afterend', '<span class="usage-filter-break" aria-hidden="true"></span>');
+  usagePage.querySelector('.usage-filter').insertAdjacentHTML('afterbegin', '<div class="usage-chart-switch usage-cost-scope" role="group" aria-label="费用类型"><button type="button" data-cost-scope="estimated" aria-pressed="false">预估费用</button><button type="button" class="active" data-cost-scope="actual" aria-pressed="true">实际费用</button></div>');
+  usagePage.querySelectorAll('[data-cost-scope]').forEach(button => button.addEventListener('click', () => {
+    usagePage.querySelectorAll('[data-cost-scope]').forEach(item => { item.classList.toggle('active', item === button); item.setAttribute('aria-pressed', String(item === button)); });
+    usagePage.dataset.costScope = button.dataset.costScope;
+    usagePage.dispatchEvent(new CustomEvent('usage-cost-scope-change', { bubbles: true, detail: { costScope: button.dataset.costScope } }));
+  }));
+  usagePage.dataset.costScope = 'actual';
   const userFilter = usagePage.querySelector('.usage-user-filter');
   usagePage.querySelector('#usageFilterBtn').before(userFilter);
   const userInput = userFilter.querySelector('input');
@@ -91,18 +101,19 @@
   }));
   const find = selector => scope.querySelector(scope.id === 'dashboardPage' ? selector.replace(/#(usage[\w-]+)/g, '#dashboard-$1') : selector);
   const models = [
-    { name: 'gpt-6-sol', requests: 57, tokens: 5793956, rpm: 0.04, tpm: 4023.5, color: '#84cc16', calls: [0, 0, 0, 0, 0, 29, 28], spend: [0, 0, 0, 0, 0, 8, 13.99] },
-    { name: 'gpt-5.6-luna', requests: 35, tokens: 1069000, rpm: 0.02, tpm: 742.4, color: '#4d7c0f', calls: [0, 0, 0, 0, 0, 35, 0], spend: [0, 0, 0, 0, 30, 0, 0] },
-    { name: 'gpt-5.6-sol', requests: 5, tokens: 943000, rpm: 0, tpm: 654.9, color: '#a3e635', calls: [0, 0, 0, 0, 2, 3, 0], spend: [0, 0, 0, 0, 0, 20, 0] },
-    { name: 'gpt-6-luna', requests: 2, tokens: 37000, rpm: 0, tpm: 25.7, color: '#65a30d', calls: [0, 0, 0, 0, 0, 2, 0], spend: [0, 0, 0, 0, 0, 0, 0] },
-    { name: 'gpt-5.6-terra', requests: 6, tokens: 0, rpm: 0, tpm: 0, color: '#94a3b8', calls: [0, 0, 0, 0, 0, 6, 0], spend: [0, 0, 0, 0, 0, 0, 0] },
-    { name: 'gpt-6.1-sol', requests: 1, tokens: 0, rpm: 0, tpm: 0, color: '#334155', calls: [0, 0, 0, 0, 0, 1, 0], spend: [0, 0, 0, 0, 0, 0, 0] }
+    { name: 'gpt-6-sol', requests: 57, success: 57, failure: 0, successRate: 100, share: 53.77, latest: '2026-10-27 10:44:59', tokens: 5793956, rpm: 0.04, tpm: 4023.5, color: '#84cc16', calls: [0, 0, 0, 0, 0, 29, 28], spend: [0, 0, 0, 0, 0, 8, 13.99] },
+    { name: 'gpt-5.6-luna', requests: 35, success: 34, failure: 1, successRate: 97.14, share: 33.02, latest: '2026-10-27 10:44:59', tokens: 1069000, rpm: 0.02, tpm: 742.4, color: '#4d7c0f', calls: [0, 0, 0, 0, 0, 35, 0], spend: [0, 0, 0, 0, 30, 0, 0] },
+    { name: 'gpt-5.6-sol', requests: 5, success: 5, failure: 0, successRate: 100, share: 4.72, latest: '2026-10-27 10:44:59', tokens: 943000, rpm: 0, tpm: 654.9, color: '#a3e635', calls: [0, 0, 0, 0, 2, 3, 0], spend: [0, 0, 0, 0, 0, 20, 0] },
+    { name: 'gpt-6-luna', requests: 2, success: 2, failure: 0, successRate: 100, share: 1.89, latest: '2026-10-27 10:44:58', tokens: 37000, rpm: 0, tpm: 25.7, color: '#65a30d', calls: [0, 0, 0, 0, 0, 2, 0], spend: [0, 0, 0, 0, 0, 0, 0] },
+    { name: 'gpt-5.6-terra', requests: 6, success: 5, failure: 1, successRate: 83.33, share: 5.66, latest: '2026-10-27 10:44:58', tokens: 0, rpm: 0, tpm: 0, color: '#94a3b8', calls: [0, 0, 0, 0, 0, 6, 0], spend: [0, 0, 0, 0, 0, 0, 0] },
+    { name: 'gpt-6.1-sol', requests: 1, success: 1, failure: 0, successRate: 100, share: 0.94, latest: '2026-10-27 10:44:57', tokens: 0, rpm: 0, tpm: 0, color: '#334155', calls: [0, 0, 0, 0, 0, 1, 0], spend: [0, 0, 0, 0, 0, 0, 0] }
   ];
   const spendTotal = model => model.spend.reduce((total, value) => total + value, 0);
   const hours = ['05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00'];
   let sort = { key: 'requests', descending: true }, spendMode = 'bar', analysisMode = 'trend';
   const money = value => '¥' + value.toFixed(2);
   const tokenLabel = value => value >= 10000 ? (value / 10000).toFixed(1) + '万' : value.toLocaleString('zh-CN');
+  const peakTpm = [1280000, 1210000, 420000, 310000, 260000, 380000, 220000, 170000, 640000, 2140000, 4780000, 5360000, 4120000, 2390000, 3720000, 5210000, 4980000, 4760000, 4690000, 4480000, 4370000, 3940000, 1860000, 320000];
   const legend = target => { find(target).innerHTML = models.map(model => `<span><i style="background:${model.color}"></i>${model.name}</span>`).join(''); };
 
   function renderTable() {
@@ -110,7 +121,7 @@
       const result = sort.key === 'model' ? a.name.localeCompare(b.name) : sort.key === 'spend' ? spendTotal(a) - spendTotal(b) : a[sort.key] - b[sort.key];
       return sort.descending ? -result : result;
     });
-    find('#usageModelRows').innerHTML = rows.map(model => `<tr><td>${model.name}</td><td>${money(spendTotal(model))}</td><td>${model.requests}</td><td>${tokenLabel(model.tokens)}</td><td>${model.rpm.toFixed(2)}</td><td>${model.tpm.toFixed(1)}</td></tr>`).join('');
+    find('#usageModelRows').innerHTML = rows.map(model => `<tr><td>${model.name}</td><td><div class="usage-success-rate"><span class="usage-success-track" aria-hidden="true"><i style="width:${model.successRate}%"></i></span><span>${model.successRate.toFixed(2)}%</span></div></td><td>${money(spendTotal(model))}</td><td>${model.requests}</td><td>${tokenLabel(model.tokens)}</td><td>${model.rpm.toFixed(2)}</td><td>${model.tpm.toFixed(1)}</td><td class="usage-outcomes"><span class="success-count">${model.success} 成功</span><span class="divider">/</span><span class="failure-count">${model.failure} 失败</span></td><td class="usage-share">${model.share.toFixed(2)}%</td><td class="usage-latest">${model.latest}</td></tr>`).join('');
     scope.querySelectorAll('.usage-table th button').forEach(button => {
       const selected = button.dataset.sort === sort.key;
       button.querySelector('.usage-sort-icon').setAttribute('data-active', selected ? (sort.descending ? 'down' : 'up') : 'none');
@@ -190,8 +201,7 @@
 
   function renderAnalysis() {
     const target = find('#usageAnalysisChart');
-    const title = { trend: '调用趋势', distribution: '调用次数分布', ranking: '调用次数排行' }[analysisMode];
-    find('#usageAnalysisTitle').textContent = title;
+    const title = { trend: '调用趋势', distribution: '调用占比', ranking: '调用次数排行' }[analysisMode];
     if (analysisMode === 'ranking') {
       target.removeAttribute('role');
       target.classList.add('ranking-view');
@@ -215,11 +225,38 @@
       });
       target.innerHTML = svgFrame(content, 40, 4);
     }
-    target.setAttribute('aria-label', title + '，合计 106 次请求');
+      target.setAttribute('aria-label', title + '，合计 106 次请求');
     legend('#usageAnalysisLegend');
   }
 
-  window.renderUsage = function (target = scope) { scope = target; renderTable(); renderSpend(); renderAnalysis(); };
+  function renderPeakTpm() {
+    const target = find('#usagePeakChart');
+    if (!target) return;
+    const width = 900, chartLeft = 58, chartRight = 880, chartTop = 18, chartBottom = 218, maximum = 6000000;
+    const x = index => chartLeft + index * (chartRight - chartLeft) / (peakTpm.length - 1);
+    const y = value => chartBottom - value / maximum * (chartBottom - chartTop);
+    const points = peakTpm.map((value, index) => [x(index), y(value)]);
+    let path = `M ${points[0][0]} ${points[0][1]}`;
+    for (let index = 1; index < points.length; index++) {
+      const previous = points[index - 1], current = points[index], midpoint = (previous[0] + current[0]) / 2;
+      path += ` C ${midpoint} ${previous[1]}, ${midpoint} ${current[1]}, ${current[0]} ${current[1]}`;
+    }
+    let grid = '';
+    [0, 2000000, 4000000, 6000000].forEach(value => {
+      const gridY = y(value);
+      grid += `<line class="peak-grid" x1="${chartLeft}" y1="${gridY}" x2="${chartRight}" y2="${gridY}"/><text x="46" y="${gridY + 4}" text-anchor="end">${value ? value / 1000000 + 'M' : '0'}</text>`;
+    });
+    let labels = '';
+    for (let hour = 0; hour < 24; hour += 2) labels += `<text x="${x(hour)}" y="248" text-anchor="middle">${String(hour).padStart(2, '0')}:00</text>`;
+    const peak = Math.max(...peakTpm), peakHour = peakTpm.indexOf(peak);
+    const dots = points.map((point, index) => `<circle class="peak-point" cx="${point[0]}" cy="${point[1]}" r="5" tabindex="0" role="img" aria-label="${String(index).padStart(2, '0')}:00，峰值 ${peakTpm[index].toLocaleString('zh-CN')} TPM"><title>${String(index).padStart(2, '0')}:00 · ${peakTpm[index].toLocaleString('zh-CN')} TPM</title></circle>`).join('');
+    target.innerHTML = `<svg viewBox="0 0 ${width} 265" preserveAspectRatio="none" aria-hidden="false">${grid}<line class="peak-axis" x1="${chartLeft}" y1="${chartBottom}" x2="${chartRight}" y2="${chartBottom}"/><path class="peak-area" d="${path} L ${chartRight} ${chartBottom} L ${chartLeft} ${chartBottom} Z"/><path class="peak-line" d="${path}"/>${dots}${labels}</svg>`;
+    target.setAttribute('aria-label', `每小时峰值 TPM 折线图，当日峰值 ${peak.toLocaleString('zh-CN')}，出现在 ${String(peakHour).padStart(2, '0')}:00`);
+    const value = find('#usagePeakValue');
+    if (value) value.textContent = `${(peak / 1000000).toFixed(2)}M · ${String(peakHour).padStart(2, '0')}:00`;
+  }
+
+  window.renderUsage = function (target = scope) { scope = target; renderTable(); renderSpend(); renderAnalysis(); renderPeakTpm(); };
   document.querySelectorAll('.usage-page .usage-table th button').forEach(button => button.addEventListener('click', () => {
     scope = button.closest('.usage-page');
     const key = button.dataset.sort;

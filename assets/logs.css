@@ -38,11 +38,11 @@
 /* Log views share the console's typography, controls and surface tokens. */
 #logsPage [hidden]{display:none!important}
 .logs-tabs{display:inline-flex;gap:4px;padding:5px;margin:0 0 24px;border:1px solid var(--ui-border);border-radius:24px;background:var(--ui-control);box-shadow:var(--ui-shadow-inset)}
-.logs-tabs button{border:0;border-radius:16px;background:transparent;padding:10px 20px;font-family:inherit;font-size:14px;font-weight:600;line-height:1.5;color:var(--ui-text-muted);cursor:pointer}
+.logs-tabs button{height:36px;box-sizing:border-box;border:0;border-radius:16px;background:transparent;padding:0 20px;font-family:inherit;font-size:14px;font-weight:600;line-height:1.5;color:var(--ui-text-muted);cursor:pointer}
 #logsPage .logs-tabs button[aria-selected="true"]{color:var(--ui-text)!important;background:var(--ui-surface-start);box-shadow:var(--ui-shadow-raised)}
 .logs-tabs button:hover{color:var(--ui-text)}
-#usageLogPanel>.logs-summary{margin-bottom:20px}
-#usageLogPanel>.logs-filter-card{margin-top:-24px}
+#usageLogPanel>.logs-summary{margin-bottom:2px}
+#usageLogPanel>.logs-filter-card{margin-top:-30px;margin-bottom:-12px;padding:20px 10px}
 .audit-toolbar{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:16px}
 .audit-demo{font-size:12px;color:var(--ui-text-muted)}
 .audit-filter{margin-bottom:20px}
@@ -68,6 +68,7 @@
 .audit-table tbody tr:hover{background:var(--ui-control)}
 .audit-table .audit-empty{text-align:center;height:180px;white-space:normal;color:var(--ui-text-muted)}
 .logs-tabs button:focus-visible,.audit-filter :is(input,select,button):focus-visible{outline:2px solid var(--ui-brand-strong);outline-offset:3px}
+#logsPage>.logs-tabs{height:42px;align-items:center;box-sizing:border-box}
 @media(max-width:1180px) and (min-width:761px){.audit-table th:first-child{width:20%}.audit-table th:nth-child(3){width:19%}.audit-table th:nth-child(5){width:13%}.audit-table th:last-child{width:16%}.audit-table th,.audit-table td{padding-inline:8px;font-size:12px}}
 @media(max-width:900px){.audit-filter-main{grid-template-columns:1fr 1fr}.audit-range{grid-column:1/-1}.audit-actions{grid-column:1/-1}}
 @media(max-width:760px){.audit-table thead{display:none}.audit-table,.audit-table tbody,.audit-table tr{display:block}.audit-table tr{padding:16px 24px}.audit-table td{display:flex;justify-content:space-between;gap:16px;width:100%!important;height:auto;padding:5px 0!important;font-size:12px;white-space:normal;overflow-wrap:anywhere;text-align:right}.audit-table td:before{content:attr(data-label);flex:none;color:var(--ui-text-muted)}.audit-table td.audit-empty{display:block;padding-block:36px!important;text-align:center}.audit-table td.audit-empty:before{display:none}.audit-table-card .logs-pagination{flex-wrap:wrap}.audit-table-card .logs-total{flex-basis:100%}.audit-feedback{max-width:45%}}
@@ -109,3 +110,4 @@
 #auditLogPanel .audit-range .logs-date-control input{min-width:0;flex:1;color:var(--ui-text)}
 #auditLogPanel .audit-range .logs-date-control:focus-within{outline:2px solid var(--ui-brand-strong);outline-offset:3px}
 #auditLogPanel .audit-range-separator{flex:none;color:var(--ui-text);font-size:16px;font-weight:700}
+#auditLogPanel .audit-filter-main{transform:translateX(-5px)}
