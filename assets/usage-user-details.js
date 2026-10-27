@@ -7,6 +7,7 @@
   const headings = ['用户','请求数','额度','Token','平均 RPM','平均 TPM','成功率 / 失败数','最近调用'];
   const sortIcon = '<svg class="usage-sort-icon" viewBox="0 0 24 28" aria-hidden="true"><path class="sort-up" d="M12 1 2 12h20L12 1Z"/><path class="sort-down" d="M12 27 22 16H2l10 11Z"/></svg>';
   card.innerHTML = `<div class="usage-section-head"><div><h2>用户用量明细</h2><p>演示数据 · 按用户查看请求、费用与调用情况</p></div><button type="button" class="btn-light usage-details-view">查看</button></div><div class="usage-table-wrap"><table class="usage-table usage-user-table"><thead><tr>${headings.map((title,index)=>`<th><button type="button" data-user-sort="${index}">${title} ${sortIcon}</button></th>`).join('')}</tr></thead><tbody></tbody></table></div><div class="usage-details-pagination"><span class="usage-details-total"></span><label>每页行数 <select aria-label="用户明细每页行数"><option>20</option><option>50</option><option>100</option></select></label><button type="button" disabled aria-label="上一页">‹</button><span>1</span><button type="button" disabled aria-label="下一页">›</button></div>`;
+  page.querySelector('.usage-peak-card')?.before(card);
   const tbody = card.querySelector('tbody');
   const users = [
     ['admin','Root User',106,71.99,7842956,0.07,5446.5,98.1,2,'2026-10-21 14:43:31'],
@@ -21,7 +22,6 @@
   function render() {
     const all = page.dataset.userScope === 'all';
     card.hidden = !all;
-    spendCard.hidden = all;
     const query = all ? (page.querySelector('.usage-user-filter input')?.value || '').trim().toLowerCase() : '';
     const columns = [0,2,3,4,5,6,7,9];
     const matches = users.filter(user => user[0].toLowerCase().includes(query)).sort((a,b)=>{

@@ -1,48 +1,82 @@
 (function () {
   let scope = document.querySelector('#usagePage');
   const usagePage = scope;
+  usagePage.querySelector('#usageExportBtn')?.addEventListener('click', () => {
+    const table = usagePage.querySelector('.usage-table');
+    if (!table) return;
+    const rows = [...table.rows].map(row => [...row.cells].map(cell => `"${cell.textContent.trim().replaceAll('"', '""')}"`).join(','));
+    const blob = new Blob(['\ufeff' + rows.join('\n')], { type: 'text/csv;charset=utf-8' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `usage-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+    URL.revokeObjectURL(link.href);
+  });
   usagePage.dataset.userScope = 'self';
-  usagePage.querySelector('.usage-filter').insertAdjacentHTML('beforeend', '<div class="usage-user-filter" hidden><input type="search" aria-label="筛选用户名" placeholder="筛选用户名" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="usageUserMatches"><div id="usageUserMatches" class="usage-user-matches" role="listbox" hidden></div></div><div class="usage-chart-switch usage-user-scope" role="group" aria-label="用户范围"><button type="button" class="active" data-user-scope="self" aria-pressed="true">仅自己</button><button type="button" data-user-scope="all" aria-pressed="false">全部</button></div>');
+  usagePage.querySelector('.usage-filter').insertAdjacentHTML('beforeend', '<div class="usage-user-filter" hidden><input type="search" aria-label="筛选用户名" placeholder="筛选用户名" autocomplete="off" role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="usageUserMatches"><div id="usageUserMatches" class="usage-user-matches" role="listbox" hidden></div></div><label class="usage-department-filter" hidden><span class="sr-only">事业部</span><select aria-label="事业部"><option value="all">全部事业部</option><option value="engineering">研发事业部</option><option value="product">产品事业部</option><option value="operations">运营事业部</option></select></label><label class="usage-team-filter" hidden><span class="sr-only">部门</span><select aria-label="部门"><option value="all">全部部门</option><option value="platform">平台研发部</option><option value="algorithm">算法部</option><option value="product-design">产品设计部</option><option value="operations">运营部</option></select></label><div class="usage-chart-switch usage-user-scope" role="group" aria-label="用户范围"><button type="button" class="active" data-user-scope="self" aria-pressed="true">仅自己</button><button type="button" data-user-scope="all" aria-pressed="false">全部</button></div>');
   const userScope = usagePage.querySelector('.usage-user-scope');
   usagePage.querySelector('.usage-filter').prepend(userScope);
+  userScope.after(usagePage.querySelector('#usageExportBtn'));
   userScope.insertAdjacentHTML('afterend', '<span class="usage-filter-break" aria-hidden="true"></span>');
   usagePage.querySelector('.usage-filter').insertAdjacentHTML('afterbegin', '<div class="usage-chart-switch usage-cost-scope" role="group" aria-label="费用类型"><button type="button" data-cost-scope="estimated" aria-pressed="false">预估费用</button><button type="button" class="active" data-cost-scope="actual" aria-pressed="true">实际费用</button></div>');
   usagePage.querySelectorAll('[data-cost-scope]').forEach(button => button.addEventListener('click', () => {
     usagePage.querySelectorAll('[data-cost-scope]').forEach(item => { item.classList.toggle('active', item === button); item.setAttribute('aria-pressed', String(item === button)); });
     usagePage.dataset.costScope = button.dataset.costScope;
+    syncDateInputs(button.dataset.costScope);
+    syncScopeCards();
     usagePage.dispatchEvent(new CustomEvent('usage-cost-scope-change', { bubbles: true, detail: { costScope: button.dataset.costScope } }));
   }));
   usagePage.dataset.costScope = 'actual';
   const userFilter = usagePage.querySelector('.usage-user-filter');
-  usagePage.querySelector('#usageFilterBtn').before(userFilter);
+  const departmentFilter = usagePage.querySelector('.usage-department-filter');
+  const teamFilter = usagePage.querySelector('.usage-team-filter');
+  usagePage.querySelector('.usage-model-card').insertAdjacentHTML('beforebegin', '<section class="card usage-department-card" hidden><div class="usage-section-head"><div><h2>事业部消耗金额</h2><p>按事业部汇总当前时间范围内的消耗金额</p></div><span class="usage-analysis-count">按消耗金额降序</span></div><div class="usage-department-chart" id="usageDepartmentChart"></div></section>');
+  const departmentCard = usagePage.querySelector('.usage-department-card');
+  const selfScopeCards = usagePage.querySelectorAll('.usage-model-card, .usage-analysis-card');
+  const peakCard = usagePage.querySelector('.usage-peak-card');
+  const spendCard = usagePage.querySelector('.usage-chart-card');
+  const callAnalysisCard = usagePage.querySelector('.usage-call-analysis-card');
+  function syncScopeCards() {
+    const all = usagePage.dataset.userScope === 'all';
+    const actualSelf = !all && usagePage.dataset.costScope === 'actual';
+    selfScopeCards.forEach(card => { card.hidden = all || actualSelf; });
+    if (peakCard) peakCard.hidden = actualSelf || (all && usagePage.dataset.costScope === 'actual');
+    if (spendCard) spendCard.hidden = all;
+    if (callAnalysisCard) callAnalysisCard.hidden = all;
+  }
+  syncScopeCards();
+  usagePage.querySelector('#usageFilterBtn').before(departmentFilter, teamFilter, userFilter);
   const userInput = userFilter.querySelector('input');
   const userMatches = userFilter.querySelector('.usage-user-matches');
-  const dateControl = usagePage.querySelector('.usage-date-control');
-  const initialDates = [...dateControl.querySelectorAll('input')].map(input => input.value);
-  let savedDates = initialDates;
-  let savedMonth = (initialDates[1] || initialDates[0] || new Date().toISOString().slice(0, 7)).slice(0, 7);
-  function syncDateControl(userScope) {
-    const inputs = [...dateControl.querySelectorAll('input')];
-    if (userScope === 'all') {
-      if (inputs.length === 2) savedDates = inputs.map(input => input.value);
-      dateControl.querySelector('span')?.remove();
-      dateControl.replaceChildren(dateControl.querySelector('svg'), Object.assign(document.createElement('input'), { type: 'month', value: savedMonth }));
-      dateControl.querySelector('input').setAttribute('aria-label', '统计月份');
-      dateControl.classList.add('is-month');
-      return;
-    }
-    if (inputs.length === 1) savedMonth = inputs[0].value;
-    const icon = dateControl.querySelector('svg');
-    const start = Object.assign(document.createElement('input'), { type: 'date', value: savedDates[0] || initialDates[0] });
-    const separator = document.createElement('span');
-    const end = Object.assign(document.createElement('input'), { type: 'date', value: savedDates[1] || initialDates[1] });
-    start.setAttribute('aria-label', '开始日期');
-    separator.textContent = '～';
-    separator.setAttribute('aria-hidden', 'true');
-    end.setAttribute('aria-label', '结束日期');
-    dateControl.replaceChildren(icon, start, separator, end);
-    dateControl.classList.remove('is-month');
+  departmentFilter.before(usagePage.querySelector('.usage-date-presets'));
+  const datePresets = usagePage.querySelector('.usage-date-presets');
+  datePresets.hidden = usagePage.dataset.costScope === 'actual';
+  const monthControl = document.createElement('label');
+  monthControl.className = 'usage-month-control';
+  monthControl.innerHTML = '<span class="sr-only">统计月份</span><input type="month" aria-label="统计月份" value="2026-10">';
+  departmentFilter.before(monthControl);
+  monthControl.hidden = usagePage.dataset.costScope !== 'actual';
+  const rangeStart = new Date();
+  rangeStart.setDate(rangeStart.getDate() - 6);
+  usagePage.dataset.startDate = rangeStart.toISOString().slice(0, 10);
+  usagePage.dataset.endDate = new Date().toISOString().slice(0, 10);
+  function syncDateInputs(costScope) {
+    datePresets.hidden = costScope === 'actual';
+    monthControl.hidden = costScope !== 'actual';
   }
+  datePresets.addEventListener('click', event => {
+    const button = event.target.closest('[data-range]');
+    if (!button || usagePage.dataset.costScope === 'actual') return;
+    datePresets.querySelectorAll('button').forEach(item => item.classList.toggle('active', item === button));
+    if (button.dataset.range === 'custom') return;
+    const end = new Date();
+    const start = new Date(end);
+    if (button.dataset.range === 'yesterday') { start.setDate(start.getDate() - 1); end.setDate(end.getDate() - 1); }
+    else if (button.dataset.range !== 'today') start.setDate(start.getDate() - Number(button.dataset.range) + 1);
+    const format = date => date.toISOString().slice(0, 10);
+    usagePage.dataset.startDate = format(start);
+    usagePage.dataset.endDate = format(end);
+  });
   function availableUsers() {
     try {
       const saved = JSON.parse(localStorage.getItem('maas-users-demo'));
@@ -50,6 +84,8 @@
     } catch {}
     return [...document.querySelectorAll('#userRows .user-name')].map(item => item.textContent.trim());
   }
+  const departmentSpend = [['AIM',97560],['DG',39530],['ACG智能创新',14520],['CS',13610],['CS-CC',5700],['SSG',3940],['HR&Admin',1600],['市场',110.43],['财务',20.54]];
+  usagePage.querySelector('#usageDepartmentChart').innerHTML = departmentSpend.map(([name,value],index) => `<div class="usage-department-row"><span class="usage-department-name">${name}</span><span class="usage-department-track"><i style="width:${Math.max(value / departmentSpend[0][1] * 100,.4)}%;opacity:${1-index*.045}"></i></span><strong class="usage-department-value">¥${value>=1000?(value/1000).toFixed(2)+'K':value.toFixed(2)}</strong></div>`).join('');
   function renderUserMatches() {
     const query = userInput.value.trim().toLocaleLowerCase();
     const matches = query ? availableUsers().filter(name => name.toLocaleLowerCase().includes(query)) : [];
@@ -88,8 +124,13 @@
   });
   usagePage.querySelectorAll('[data-user-scope]').forEach(button => button.addEventListener('click', () => {
     usagePage.dataset.userScope = button.dataset.userScope;
-    syncDateControl(button.dataset.userScope);
     userFilter.hidden = button.dataset.userScope !== 'all';
+    departmentFilter.hidden = button.dataset.userScope !== 'all';
+    teamFilter.hidden = button.dataset.userScope !== 'all';
+    departmentCard.hidden = button.dataset.userScope !== 'all';
+    syncScopeCards();
+    if (button.dataset.userScope !== 'all') departmentFilter.querySelector('select').value = 'all';
+    if (button.dataset.userScope !== 'all') teamFilter.querySelector('select').value = 'all';
     userInput.value = '';
     userMatches.hidden = true;
     userInput.setAttribute('aria-expanded', 'false');
@@ -101,12 +142,12 @@
   }));
   const find = selector => scope.querySelector(scope.id === 'dashboardPage' ? selector.replace(/#(usage[\w-]+)/g, '#dashboard-$1') : selector);
   const models = [
-    { name: 'gpt-6-sol', requests: 57, success: 57, failure: 0, successRate: 100, share: 53.77, latest: '2026-10-27 10:44:59', tokens: 5793956, rpm: 0.04, tpm: 4023.5, color: '#84cc16', calls: [0, 0, 0, 0, 0, 29, 28], spend: [0, 0, 0, 0, 0, 8, 13.99] },
-    { name: 'gpt-5.6-luna', requests: 35, success: 34, failure: 1, successRate: 97.14, share: 33.02, latest: '2026-10-27 10:44:59', tokens: 1069000, rpm: 0.02, tpm: 742.4, color: '#4d7c0f', calls: [0, 0, 0, 0, 0, 35, 0], spend: [0, 0, 0, 0, 30, 0, 0] },
-    { name: 'gpt-5.6-sol', requests: 5, success: 5, failure: 0, successRate: 100, share: 4.72, latest: '2026-10-27 10:44:59', tokens: 943000, rpm: 0, tpm: 654.9, color: '#a3e635', calls: [0, 0, 0, 0, 2, 3, 0], spend: [0, 0, 0, 0, 0, 20, 0] },
-    { name: 'gpt-6-luna', requests: 2, success: 2, failure: 0, successRate: 100, share: 1.89, latest: '2026-10-27 10:44:58', tokens: 37000, rpm: 0, tpm: 25.7, color: '#65a30d', calls: [0, 0, 0, 0, 0, 2, 0], spend: [0, 0, 0, 0, 0, 0, 0] },
-    { name: 'gpt-5.6-terra', requests: 6, success: 5, failure: 1, successRate: 83.33, share: 5.66, latest: '2026-10-27 10:44:58', tokens: 0, rpm: 0, tpm: 0, color: '#94a3b8', calls: [0, 0, 0, 0, 0, 6, 0], spend: [0, 0, 0, 0, 0, 0, 0] },
-    { name: 'gpt-6.1-sol', requests: 1, success: 1, failure: 0, successRate: 100, share: 0.94, latest: '2026-10-27 10:44:57', tokens: 0, rpm: 0, tpm: 0, color: '#334155', calls: [0, 0, 0, 0, 0, 1, 0], spend: [0, 0, 0, 0, 0, 0, 0] }
+    { name: 'gpt-6-sol', requests: 57, success: 57, failure: 0, successRate: 100, share: 53.77, latest: '2026-10-27 10:44:59', estimate: 21.99, original: 36.65, discount: '0.6折', inputTokens: 5200000, outputTokens: 593956, tokens: 5793956, rpm: 0.04, tpm: 4023.5, color: '#84cc16', calls: [0, 0, 0, 0, 0, 29, 28], spend: [0, 0, 0, 0, 0, 8, 13.99] },
+    { name: 'gpt-5.6-luna', requests: 35, success: 34, failure: 1, successRate: 97.14, share: 33.02, latest: '2026-10-27 10:44:59', estimate: 30, original: 50, discount: '0.6折', inputTokens: 820000, outputTokens: 249000, tokens: 1069000, rpm: 0.02, tpm: 742.4, color: '#4d7c0f', calls: [0, 0, 0, 0, 0, 35, 0], spend: [0, 0, 0, 0, 30, 0, 0] },
+    { name: 'gpt-5.6-sol', requests: 5, success: 5, failure: 0, successRate: 100, share: 4.72, latest: '2026-10-27 10:44:59', estimate: 20, original: 33.33, discount: '0.6折', inputTokens: 710000, outputTokens: 233000, tokens: 943000, rpm: 0, tpm: 654.9, color: '#a3e635', calls: [0, 0, 0, 0, 2, 3, 0], spend: [0, 0, 0, 0, 0, 20, 0] },
+    { name: 'gpt-6-luna', requests: 2, success: 2, failure: 0, successRate: 100, share: 1.89, latest: '2026-10-27 10:44:58', estimate: 0, original: 0, discount: '—', inputTokens: 29000, outputTokens: 8000, tokens: 37000, rpm: 0, tpm: 25.7, color: '#65a30d', calls: [0, 0, 0, 0, 0, 2, 0], spend: [0, 0, 0, 0, 0, 0, 0] },
+    { name: 'gpt-5.6-terra', requests: 6, success: 5, failure: 1, successRate: 83.33, share: 5.66, latest: '2026-10-27 10:44:58', estimate: 0, original: 0, discount: '—', inputTokens: 0, outputTokens: 0, tokens: 0, rpm: 0, tpm: 0, color: '#94a3b8', calls: [0, 0, 0, 0, 0, 6, 0], spend: [0, 0, 0, 0, 0, 0, 0] },
+    { name: 'gpt-6.1-sol', requests: 1, success: 1, failure: 0, successRate: 100, share: 0.94, latest: '2026-10-27 10:44:57', estimate: 0, original: 0, discount: '—', inputTokens: 0, outputTokens: 0, tokens: 0, rpm: 0, tpm: 0, color: '#334155', calls: [0, 0, 0, 0, 0, 1, 0], spend: [0, 0, 0, 0, 0, 0, 0] }
   ];
   const spendTotal = model => model.spend.reduce((total, value) => total + value, 0);
   const hours = ['05:00', '06:00', '07:00', '08:00', '09:00', '10:00', '11:00'];
@@ -114,6 +155,7 @@
   const money = value => '¥' + value.toFixed(2);
   const tokenLabel = value => value >= 10000 ? (value / 10000).toFixed(1) + '万' : value.toLocaleString('zh-CN');
   const peakTpm = [1280000, 1210000, 420000, 310000, 260000, 380000, 220000, 170000, 640000, 2140000, 4780000, 5360000, 4120000, 2390000, 3720000, 5210000, 4980000, 4760000, 4690000, 4480000, 4370000, 3940000, 1860000, 320000];
+  const callAnalysisCells = model => `<td>${model.name}</td><td>${model.requests.toLocaleString('zh-CN')}</td><td>¥${model.estimate.toFixed(2)}</td><td>¥${model.original.toFixed(2)}</td><td>${model.discount}</td><td>${tokenLabel(model.tokens)}</td><td>${tokenLabel(model.inputTokens)}</td><td>${tokenLabel(model.outputTokens)}</td><td>${tokenLabel(model.cacheWrite || 0)}</td><td>${tokenLabel(model.cacheRead || 0)}</td><td>${(model.cacheHitRate || 0).toFixed(1)}%</td><td>${model.latency || '0.00'} s</td><td><span class="success-count">${model.successRate.toFixed(2)}%</span> / <span class="failure-count">${model.failure}</span> 失败</td><td>${model.latest}</td>`;
   const legend = target => { find(target).innerHTML = models.map(model => `<span><i style="background:${model.color}"></i>${model.name}</span>`).join(''); };
 
   function renderTable() {
@@ -122,6 +164,21 @@
       return sort.descending ? -result : result;
     });
     find('#usageModelRows').innerHTML = rows.map(model => `<tr><td>${model.name}</td><td><div class="usage-success-rate"><span class="usage-success-track" aria-hidden="true"><i style="width:${model.successRate}%"></i></span><span>${model.successRate.toFixed(2)}%</span></div></td><td>${money(spendTotal(model))}</td><td>${model.requests}</td><td>${tokenLabel(model.tokens)}</td><td>${model.rpm.toFixed(2)}</td><td>${model.tpm.toFixed(1)}</td><td class="usage-outcomes"><span class="success-count">${model.success} 成功</span><span class="divider">/</span><span class="failure-count">${model.failure} 失败</span></td><td class="usage-share">${model.share.toFixed(2)}%</td><td class="usage-latest">${model.latest}</td></tr>`).join('');
+    const analysisRows = find('#usageCallAnalysisRows');
+    if (analysisRows) analysisRows.innerHTML = rows.map(model => `<tr>${callAnalysisCells(model)}</tr>`).join('');
+    const analysisHead = find('.usage-call-analysis-table thead tr');
+    if (analysisHead && !analysisHead.dataset.sortable) {
+      analysisHead.dataset.sortable = 'true';
+      const keys = ['requests', 'estimate', 'original', 'discount', 'tokens', 'inputTokens', 'outputTokens', 'cacheWrite', 'cacheRead', 'cacheHitRate', 'latency', 'successRate', 'latest'];
+      [...analysisHead.cells].slice(1).forEach((cell, index) => {
+        const key = keys[index];
+        cell.innerHTML = `<button type="button" data-call-sort="${key}">${cell.textContent.trim()} <svg class="usage-sort-icon" viewBox="0 0 24 28" aria-hidden="true"><path class="sort-up" d="M12 1 2 12h20L12 1Z"/><path class="sort-down" d="M12 27 22 16H2l10 11Z"/></svg></button>`;
+        cell.querySelector('button').addEventListener('click', () => {
+          rows.sort((a, b) => (a[key] > b[key] ? -1 : a[key] < b[key] ? 1 : 0));
+          analysisRows.innerHTML = rows.map(model => `<tr>${callAnalysisCells(model)}</tr>`).join('');
+        });
+      });
+    }
     scope.querySelectorAll('.usage-table th button').forEach(button => {
       const selected = button.dataset.sort === sort.key;
       button.querySelector('.usage-sort-icon').setAttribute('data-active', selected ? (sort.descending ? 'down' : 'up') : 'none');

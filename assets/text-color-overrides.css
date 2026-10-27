@@ -69,6 +69,14 @@ input::placeholder, textarea::placeholder { opacity: 1; }
   color: rgb(100, 116, 139) !important;
 }
 
+/* The added model-call analysis table intentionally uses solid black text. */
+#usagePage .usage-call-analysis-card .usage-call-analysis-table th,
+#usagePage .usage-call-analysis-card .usage-call-analysis-table td,
+#usagePage .usage-call-analysis-card .usage-call-analysis-table td * {
+  color: #000 !important;
+  opacity: 1 !important;
+}
+
 /* Annotated API Key field labels and section headings. */
 #keyForm > .form-grid > .form-field > label,
 #keyForm > .form-section > h3 {
