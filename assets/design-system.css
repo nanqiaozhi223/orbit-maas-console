@@ -66,6 +66,38 @@
 /* foundation */
 html, body { background: var(--ui-page); }
 body { color: var(--ui-text); font-size: 14px; line-height: 1.5; }
+
+/* Unified product styling for all filter dropdowns. Native option panels inherit
+   these colors where supported by the browser/OS; the control remains keyboard accessible. */
+select.control,
+.filterbar select,
+.logs-filter-row select,
+.audit-filter select,
+.model-filter select,
+.user-filter select,
+.square-filter-section select {
+  appearance: none;
+  -webkit-appearance: none;
+  color-scheme: light;
+  background-color: var(--ui-control);
+  color: var(--ui-text-strong);
+  border: 1px solid rgba(255,255,255,.85);
+  border-radius: var(--ui-radius-pill, 999px);
+  box-shadow: var(--ui-shadow-inset);
+  cursor: pointer;
+}
+select.control option,
+.filterbar select option,
+.logs-filter-row select option,
+.audit-filter select option,
+.model-filter select option,
+.user-filter select option,
+.square-filter-section select option {
+  background: var(--ui-surface-start);
+  color: var(--ui-text-strong);
+}
+
+.filter-select{position:relative;width:100%}.filter-select-trigger{position:relative;width:100%;height:42px;padding:0 38px 0 16px;border:1px solid rgba(255,255,255,.85);border-radius:999px;background:var(--ui-control);color:var(--ui-text-strong);box-shadow:var(--ui-shadow-inset);font:inherit;text-align:left;cursor:pointer}.filter-select-trigger:after{content:"";position:absolute;right:16px;top:50%;width:8px;height:8px;border-right:1.5px solid var(--ui-text-muted);border-bottom:1.5px solid var(--ui-text-muted);transform:translateY(-70%) rotate(45deg)}.filter-select-trigger:focus-visible{outline:2px solid var(--ui-brand-strong);outline-offset:3px}.filter-select-menu{display:none;position:absolute;z-index:40;top:calc(100% + 8px);left:0;right:0;padding:6px;border:1px solid rgba(255,255,255,.9);border-radius:16px;background:var(--ui-surface-start);box-shadow:0 16px 32px rgba(76,91,112,.18),var(--ui-shadow-inset)}.filter-select.open .filter-select-menu{display:grid;gap:3px}.filter-select-option{border:0;border-radius:10px;background:transparent;color:var(--ui-text-strong);padding:10px 12px;font:inherit;font-size:14px;text-align:left;cursor:pointer}.filter-select-option:hover,.filter-select-option[aria-selected="true"]{background:var(--ui-office-muted,#e9f8cb);color:var(--ui-brand-text)}.filter-select-option[aria-selected="true"]{font-weight:650}
 button, input, select { font: inherit; }
 button, select { cursor: pointer; }
 button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
