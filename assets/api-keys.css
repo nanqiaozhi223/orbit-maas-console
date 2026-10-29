@@ -2,13 +2,16 @@
 .api-page .api-head{margin:0 0 24px;align-items:flex-start}
 .api-page .api-head h1{font-size:20px;font-weight:700;letter-spacing:-.02em;margin-bottom:6px}
 .api-page .api-head p{font-size:13px;color:#64748b}
-.api-page .api-toolbar{display:flex;align-items:center;gap:16px;margin:0 0 16px}
+.api-page .api-scope-tabs{display:inline-flex;gap:4px;padding:4px;margin:0 0 14px;border:1px solid var(--ui-border);border-radius:999px;background:#f2f4f7;box-shadow:var(--ui-shadow-inset)}.api-page .api-scope-tabs button{border:0;background:transparent;border-radius:999px;padding:8px 18px;color:var(--ui-text-muted);font:inherit;cursor:pointer}.api-page .api-scope-tabs button.active{background:var(--ui-dark);color:#fff;box-shadow:0 2px 6px #0f172a26}.api-page .api-toolbar{display:flex;align-items:center;gap:16px;margin:0 0 16px}
+.api-page.team-scope .api-actions{display:none}
+.api-page.team-scope #keyRows tr:nth-child(-n+2){display:none}.api-table-card{position:relative}.api-table-card:after{content:'共 3 条　　　　　　　　　每页行数 20　　‹　 1 / 1　 ›';display:block;padding:16px 20px;border-top:1px solid var(--ui-border);color:var(--ui-text-muted);font-size:12px;text-align:right;line-height:36px}.api-table-card:before{content:'';display:none}.api-table-card:after{font-variant-numeric:tabular-nums}.api-table-card{overflow:hidden}
 .api-page .api-search{display:flex;align-items:center;gap:10px;flex:none}
 .api-page .api-search input{width:280px;height:44px;border-radius:14px;color:#334155}
 .api-page .api-actions{display:flex;align-items:center;justify-content:flex-end;gap:18px;margin-left:auto}
 .api-page .api-note{color:#64748b;font-size:13px;white-space:nowrap}
 .api-page .btn-dark{height:44px;border-radius:12px;padding-inline:20px}
 .api-page .api-table-card{border-radius:24px;padding-top:0}
+.api-pagination{display:flex;justify-content:flex-end;align-items:center;gap:6px;padding:14px 18px;border-top:1px solid rgba(226,232,240,.8);color:#64748b;font-size:12px}.api-pagination button{border:1px solid var(--ui-border);background:#f2f4f7;border-radius:9px;padding:7px 11px;color:#475569;cursor:pointer}.api-pagination button.active{background:#18181b;color:#fff}.api-pagination button:disabled{opacity:.45;cursor:not-allowed}.api-pagination span{margin-left:8px;color:#94a3b8}
 .api-page .api-table-scroll{overflow-x:visible}
 .api-page .api-table{width:100%;min-width:0;table-layout:fixed}
 .api-page .api-table th:nth-child(1){width:18%}.api-page .api-table th:nth-child(2){width:9%}.api-page .api-table th:nth-child(3){width:12%}.api-page .api-table th:nth-child(4){width:19%}.api-page .api-table th:nth-child(5){width:10%}.api-page .api-table th:nth-child(6){width:8%}.api-page .api-table th:nth-child(7){width:8%}.api-page .api-table th:nth-child(8){width:11%}.api-page .api-table th:nth-child(9){width:5%}
