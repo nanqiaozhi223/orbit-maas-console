@@ -99,3 +99,13 @@
 #overviewPage .quick-action { font-size: var(--overview-body-size); font-weight: 600; }
 #overviewPage .quick-action.primary-action { color: #fff; }
 #overviewPage .quick-action.ghost { color: #17191f; }
+
+/* 个人设置页复用的账户配额与统计卡片，与概览保持一致 */
+#settingsPage .settings-usage { display: flex; flex-direction: column; gap: var(--ui-module-gap); margin: 0 0 28px; font-family: var(--overview-font); font-size: var(--overview-body-size); color: var(--overview-text-secondary); }
+#settingsPage .settings-usage .quota .stat-label { font-size: var(--overview-section-size); font-weight: 600; line-height: 1.35; color: var(--overview-text-primary); }
+#settingsPage .settings-usage .stat .stat-label { font-size: var(--overview-body-size); font-weight: 500; color: var(--overview-text-secondary); }
+#settingsPage .settings-usage .quota-value, #settingsPage .settings-usage .stat-value { font-weight: 700; font-variant-numeric: tabular-nums; color: var(--overview-text-primary); }
+#settingsPage .settings-usage .quota-value { font-size: 32px; }
+#settingsPage .settings-usage .stat-value { font-size: 28px; }
+#settingsPage .settings-usage .quota-value .quota-used, #settingsPage .settings-usage .quota-value small, #settingsPage .settings-usage .quota-foot, #settingsPage .settings-usage .stat-meta { font-size: var(--overview-caption-size); font-weight: 400; line-height: 1.5; color: var(--overview-text-tertiary); }
+#settingsPage .settings-usage .quota-main .used-pill { font-size: var(--overview-caption-size); font-weight: 500; color: #365314; }

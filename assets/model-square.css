@@ -73,3 +73,83 @@
 :root[data-theme="dark"] .square-code-block pre{color:#e2e8f0}
 :root[data-theme="dark"] .square-code-copy:hover{background:var(--ui-control);color:var(--ui-brand)}
 @media(max-width:600px){.square-code-toolbar{align-items:stretch;flex-direction:column}.square-code-tabs{overflow-x:auto;max-width:100%}.square-code-tabs button{flex:none}}
+
+/* 模型可用性排名入口 */
+.square-rank.card{margin:0 0 20px;padding:22px 24px}
+.square-rank.is-detail-hidden{display:none!important}
+.square-rank-head{display:flex;align-items:center;justify-content:space-between;gap:16px}
+.square-rank-head h2{margin:0;color:var(--ui-text-strong);font-size:16px;font-weight:600;line-height:1.35}
+.square-rank-head>div{display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 12px;min-width:0}
+.square-rank-head p{margin:0;color:var(--ui-text-muted);font-size:13px}
+.square-rank-link{display:inline-flex;align-items:center;gap:4px;flex:none;height:36px;padding:0 12px 0 16px;border:1px solid var(--ui-border);border-radius:var(--ui-radius-pill);background:var(--ui-surface-start);box-shadow:var(--ui-shadow-raised);color:var(--ui-text-strong);font:inherit;font-size:13px;font-weight:500;cursor:pointer;transition:color var(--ui-motion),background var(--ui-motion)}
+.square-rank-link:hover{background:#fff;color:var(--ui-brand-deep)}
+.square-rank-link:focus-visible{outline:2px solid var(--ui-brand-strong);outline-offset:2px}
+.square-rank-link svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+:root[data-theme="dark"] .square-rank-link:hover{background:var(--ui-control);color:var(--ui-brand)}
+.square-rank-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:18px}
+.square-rank-card{position:relative;display:flex;flex-direction:column;min-width:0;padding:16px 18px;border:1px solid var(--ui-border);border-radius:var(--ui-radius-md);background:#fff;box-shadow:var(--ui-shadow-raised);overflow:hidden}
+.square-rank-card.is-featured{border-color:#d9efad;background:linear-gradient(145deg,#f7fde9,#eaf7cf)}
+.square-rank-card-head{display:flex;align-items:center;gap:10px}
+.square-rank-icon{display:grid;place-items:center;width:32px;height:32px;flex:none;border:1px solid rgba(255,255,255,.72);border-radius:var(--ui-radius-sm);background:linear-gradient(145deg,#f8f9fb,#e9ecf1);box-shadow:-3px -3px 7px rgba(255,255,255,.95),4px 4px 9px rgba(148,155,176,.16);color:#475569}
+.square-rank-card.is-featured .square-rank-icon{background:linear-gradient(145deg,#f1ffd9,#e4f9ba);color:#4d7c0f;box-shadow:-3px -3px 7px rgba(255,255,255,.95),4px 4px 9px rgba(154,174,119,.2)}
+.square-rank-icon svg{width:17px;height:17px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.square-rank-label{color:var(--ui-text-muted);font-size:13px;font-weight:500}
+.square-rank-more{display:grid;place-items:center;width:28px;height:28px;margin-left:auto;padding:0;border:0;border-radius:50%;background:transparent;color:var(--ui-text-muted);cursor:pointer;transition:background var(--ui-motion),color var(--ui-motion)}
+.square-rank-more:hover{background:rgba(255,255,255,.75);color:var(--ui-brand-deep)}
+.square-rank-more:focus-visible{outline:2px solid var(--ui-brand-strong);outline-offset:2px}
+.square-rank-more svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.square-rank-model,.square-rank-value{margin-top:14px;color:var(--ui-text);line-height:1.25;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.square-rank-model{font-size:20px;font-weight:600;letter-spacing:-.01em}
+.square-rank-value{font-size:20px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.square-rank-meta{display:flex;align-items:center;gap:6px;min-height:24px;margin-top:8px;color:var(--ui-text-muted);font-size:13px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.square-rank-meta i{font-style:normal;color:var(--ui-border-strong,#cbd5e1)}
+.square-rank-meta .is-ok{color:var(--ui-success)}
+.square-rank-meta .is-fail{color:var(--ui-danger)}
+.square-rank-ok{display:inline-flex;align-items:center;gap:5px;flex:none;height:24px;padding:0 10px 0 7px;border-radius:var(--ui-radius-pill);background:rgba(255,255,255,.75);color:#3f6212;font-size:13px;font-weight:500}
+.square-rank-ok svg{width:14px;height:14px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.square-rank-spark{flex:1 1 auto;min-width:48px;max-width:120px;height:26px;margin-left:auto;color:var(--ui-brand-strong);pointer-events:none}
+.square-rank-spark .line{fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;vector-effect:non-scaling-stroke}
+:root[data-theme="dark"] .square-rank-card{background:var(--ui-surface-start)}
+:root[data-theme="dark"] .square-rank-card.is-featured{border-color:#3f6212;background:linear-gradient(145deg,#1d2c12,#16220d)}
+:root[data-theme="dark"] .square-rank-icon{background:#1c2433;border-color:#303a4d;color:#b7c5d8;box-shadow:var(--ui-shadow-raised)}
+:root[data-theme="dark"] .square-rank-card.is-featured .square-rank-icon{background:#233818;border-color:#3f6212;color:#d9f99d}
+:root[data-theme="dark"] .square-rank-ok{background:rgba(0,0,0,.25);color:#d9f99d}
+:root[data-theme="dark"] .square-rank-more:hover{background:rgba(255,255,255,.08);color:#d9f99d}
+@media(max-width:1050px){.square-rank-cards{grid-template-columns:1fr 1fr}.square-rank-card.is-featured{grid-column:1/-1}}
+@media(max-width:760px){.square-rank-head{flex-direction:column;align-items:flex-start}.square-rank-cards{grid-template-columns:1fr}}
+/* 完整排名页：复用概览卡片、title-row 与日志表格规范 */
+.square-full-rank.is-hidden{display:none}
+.square-full-back{margin:0 0 12px}
+.square-full-head{margin-bottom:var(--ui-module-gap)}
+.square-full-summary{margin:0 0 var(--ui-module-gap)}
+.square-full-summary .square-rank-meta>span:not(.square-rank-ok){color:var(--ui-text-muted)}
+.square-full-card.card{padding:0;overflow:hidden}
+.square-full-card-head{padding:20px 22px 16px}
+.square-full-card-head h2{margin:0;color:var(--ui-text-strong);font-size:16px;font-weight:600;line-height:1.35}
+.square-full-card-head p{margin:6px 0 0;color:var(--ui-text-muted);font-size:13px;line-height:1.5}
+.square-full-table-wrap{overflow-x:auto;border-top:1px solid var(--ui-border);margin:0 22px}
+.square-full-table{width:100%;min-width:1040px;border-collapse:collapse}
+.square-full-table th,.square-full-table td{padding:14px 12px;text-align:left;white-space:nowrap;vertical-align:middle;border-bottom:1px solid var(--ui-border)}
+.square-full-table th:first-child,.square-full-table td:first-child{padding-left:0}
+.square-full-table th:last-child,.square-full-table td:last-child{padding-right:0}
+.square-full-table tbody tr:last-child td{border-bottom:0}
+.square-full-table th{color:var(--ui-text-strong);font-size:12px;font-weight:600}
+.square-full-table td{color:var(--ui-text);font-size:13px;font-variant-numeric:tabular-nums}
+.square-full-table .is-num{text-align:right}
+.square-full-table tbody tr:hover{background:rgba(255,255,255,.46)}
+.square-full-table .is-fail{color:var(--ui-danger)}
+.rank-number{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--ui-control);color:var(--ui-text-muted);font-size:12px;font-weight:600}
+.rank-number.is-top{background:#e9f8cb;color:var(--ui-brand-text)}
+.rank-model{font-weight:600}
+.rank-badge{display:inline-flex;align-items:center;height:22px;margin-left:8px;padding:0 8px;border-radius:var(--ui-radius-pill);background:#e9f8cb;color:var(--ui-brand-text);font-size:11px;font-weight:500}
+.rank-badge.is-warn{background:#fef3c7;color:#92400e}
+.rank-rate{display:inline-block;width:88px;height:6px;margin-right:10px;vertical-align:middle;border-radius:var(--ui-radius-pill);background:var(--ui-control);box-shadow:var(--ui-shadow-inset);overflow:hidden}
+.rank-rate i{display:block;height:100%;border-radius:inherit;background:var(--ui-brand-strong)}
+.rank-rate.is-warn i{background:var(--ui-warning)}
+.rank-rate-value{font-weight:600}
+.rank-time{color:var(--ui-text-muted);font-size:12px}
+:root[data-theme="dark"] .square-full-table tbody tr:hover{background:rgba(39,48,67,.42)}
+:root[data-theme="dark"] .rank-number.is-top,:root[data-theme="dark"] .rank-badge{background:#233818;color:#d9f99d}
+:root[data-theme="dark"] .rank-badge.is-warn{background:#3a2a0c;color:#fcd34d}
+@media(max-width:760px){.square-full-card-head{padding:16px}.square-full-table-wrap{margin:0 16px}}
+.square-rank-spark .line{filter:url(#squareRankSparkGlow);stroke-width:2.4}.square-rank-spark .spark-points circle{fill:var(--ui-surface-start);stroke:currentColor;stroke-width:1.8;filter:drop-shadow(0 1px 2px rgba(77,124,15,.18))}

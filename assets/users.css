@@ -16,3 +16,7 @@
 :root[data-theme="dark"] .nav-subitem.active{background:linear-gradient(145deg,#233818,#17270f);border-color:#4d7c0f;color:#d9f99d;box-shadow:0 0 18px rgba(132,204,22,.16)}
 :root[data-theme="dark"] .nav-item.has-active-child{color:#d9f99d}
 @media(max-width:1050px){.nav-submenu{display:none!important}}
+
+/* 筛选框：增强下拉已自带胶囊外观，去掉外层 label 的重复样式 */
+.users-toolbar .user-filter:has(.filter-select){height:auto;padding:0;border:0;background:transparent;box-shadow:none}
+.users-toolbar .user-filter .filter-select-trigger{min-width:132px}
