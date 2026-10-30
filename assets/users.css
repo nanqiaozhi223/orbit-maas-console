@@ -47,7 +47,7 @@
 .users-toolbar .user-filter:has(.filter-select){height:auto;padding:0;border:0;background:transparent;box-shadow:none}
 .users-toolbar .user-filter .filter-select-trigger{min-width:132px}
 /* 添加权限配置弹窗：选择员工 -> 部门树勾选 -> 已选名单 */
-.permission-dialog{width:min(920px,calc(100vw - 48px));max-height:calc(100vh - 48px);padding:0;border:1px solid var(--ui-border);border-radius:var(--ui-radius-lg);background:linear-gradient(145deg,var(--ui-surface-start),var(--ui-surface-end));color:var(--ui-text);box-shadow:var(--ui-shadow-surface);overflow:hidden}
+.permission-dialog{width:min(920px,calc(100vw - 48px));max-height:calc(100vh - 48px);padding:0;border:1px solid var(--ui-border);border-radius:var(--ui-radius-lg);background:linear-gradient(145deg,var(--ui-surface-start),var(--ui-surface-end));color:var(--ui-text);box-shadow:0 8px 24px rgba(39,48,67,.12),0 2px 8px rgba(39,48,67,.06);overflow:hidden}
 .permission-dialog[open]{display:flex}
 .permission-dialog-form{display:flex;flex-direction:column;width:100%;max-height:calc(100vh - 48px);padding:22px 24px 20px;overflow-y:auto}
 .permission-dialog-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:18px}
