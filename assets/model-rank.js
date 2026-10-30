@@ -12,24 +12,24 @@
       <div><h2 id="squareRankTitle">模型可用性</h2><p>最近 10 分钟 · 综合考虑成功率与调用量</p></div>
       <button type="button" class="square-rank-link">查看完整排名<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button>
     </div>
-    <div class="square-rank-cards">
-      <article class="square-rank-card is-featured">
-        <div class="square-rank-card-head"><span class="square-rank-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m3.5 8 4.6 3.6L12 5l3.9 6.6L20.5 8l-1.8 10H5.3z"/><path d="M6 21h12"/></svg></span><span class="square-rank-label">综合推荐</span><button type="button" class="square-rank-more" aria-label="查看综合推荐排名"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button></div>
-        <div class="square-rank-model">${summary.top}</div>
-        <div class="square-rank-meta"><span class="square-rank-ok"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="m8.5 12.2 2.4 2.4 4.8-5"/></svg>${summary.topRate} 成功率</span>
-        <svg class="square-rank-spark" viewBox="0 0 120 40" preserveAspectRatio="none" aria-hidden="true"><defs><linearGradient id="squareRankSparkFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="currentColor" stop-opacity=".22"/><stop offset="1" stop-color="currentColor" stop-opacity="0"/></linearGradient><filter id="squareRankSparkGlow" x="-20%" y="-30%" width="140%" height="170%"><feGaussianBlur stdDeviation="1.6" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><path class="fill" d="M0 32 C8 30 10 27 14 28 S22 32 26 30 S34 24 38 22 S46 25 50 24 S58 18 62 16 S70 20 74 19 S82 13 86 11 S94 15 98 13 S106 7 110 6 S117 8 120 8 L120 40 L0 40 Z" fill="url(#squareRankSparkFill)"/><path class="line" d="M0 32 C8 30 10 27 14 28 S22 32 26 30 S34 24 38 22 S46 25 50 24 S58 18 62 16 S70 20 74 19 S82 13 86 11 S94 15 98 13 S106 7 110 6 S117 8 120 8"/><g class="spark-points"><circle cx="38" cy="22" r="2.2"/><circle cx="74" cy="19" r="2.2"/><circle cx="110" cy="6" r="2.2"/></g></svg></div>
-      </article>
-      <article class="square-rank-card">
-        <div class="square-rank-card-head"><span class="square-rank-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 20V11M12 20V5M19 20v-6"/></svg></span><span class="square-rank-label">总调用次数</span></div>
-        <div class="square-rank-value">${summary.total}</div>
-        <div class="square-rank-meta"><span class="is-ok">成功 ${summary.ok}</span><i aria-hidden="true">/</i><span class="is-fail">失败 ${summary.fail}</span></div>
-      </article>
-      <article class="square-rank-card">
-        <div class="square-rank-card-head"><span class="square-rank-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m12 3 8 4.5v9L12 21l-8-4.5v-9z"/><path d="m4 7.5 8 4.5 8-4.5M12 12v9"/></svg></span><span class="square-rank-label">活跃模型</span></div>
-        <div class="square-rank-value">${summary.active}</div>
-        <div class="square-rank-meta">最近 10 分钟有调用记录</div>
-      </article>
+    <div class="square-rank-strip">
+      <div class="square-rank-stat is-featured">
+        <div class="square-rank-stat-head"><span class="square-rank-crown" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="m4 8.5 4.2 3.3L12 6l3.8 5.8L20 8.5 18.4 17H5.6z"/><path d="M6 20h12"/></svg></span><span>综合推荐</span></div>
+        <strong>${summary.top}</strong>
+        <span class="square-rank-pill"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m7.8 12.3 2.8 2.8 5.6-5.8"/></svg>${summary.topRate} 成功率</span>
+      </div>
+      <div class="square-rank-stat">
+        <div class="square-rank-stat-head"><span>总调用次数</span></div>
+        <strong>${summary.total}</strong>
+        <span class="square-rank-stat-meta">成功 ${summary.ok}<i aria-hidden="true">/</i>失败 ${summary.fail}</span>
+      </div>
+      <div class="square-rank-stat">
+        <div class="square-rank-stat-head"><span>活跃模型</span></div>
+        <strong>${summary.active}</strong>
+        <span class="square-rank-stat-meta">最近 10 分钟有调用记录</span>
+      </div>
     </div>
+    <img class="square-rank-illustration" src="assets/square-rank-art.png" alt="" aria-hidden="true" />
   </section>`);
 
   const rank = root.querySelector('.square-rank');
