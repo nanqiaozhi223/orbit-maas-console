@@ -30,9 +30,9 @@
   const userFilter = usagePage.querySelector('.usage-user-filter');
   const departmentFilter = usagePage.querySelector('.usage-department-filter');
   const teamFilter = usagePage.querySelector('.usage-team-filter');
-  usagePage.querySelector('.usage-model-card').insertAdjacentHTML('beforebegin', '<section class="card usage-department-card" hidden><div class="usage-section-head"><div><h2>事业部消耗金额</h2><p>按事业部汇总当前时间范围内的消耗金额</p></div><span class="usage-analysis-count">按消耗金额降序</span></div><div class="usage-department-chart" id="usageDepartmentChart"></div></section>');
+  usagePage.querySelector('.usage-chart-card').insertAdjacentHTML('beforebegin', '<section class="card usage-department-card" hidden><div class="usage-section-head"><div><h2>事业部消耗金额</h2><p>按事业部汇总当前时间范围内的消耗金额</p></div><span class="usage-analysis-count">按消耗金额降序</span></div><div class="usage-department-chart" id="usageDepartmentChart"></div></section>');
   const departmentCard = usagePage.querySelector('.usage-department-card');
-  const selfScopeCards = usagePage.querySelectorAll('.usage-model-card, .usage-analysis-card');
+  const selfScopeCards = usagePage.querySelectorAll('.usage-analysis-card');
   const peakCard = usagePage.querySelector('.usage-peak-card');
   const spendCard = usagePage.querySelector('.usage-chart-card');
   const callAnalysisCard = usagePage.querySelector('.usage-call-analysis-card');
@@ -155,27 +155,56 @@
   const money = value => '¥' + value.toFixed(2);
   const tokenLabel = value => value >= 10000 ? (value / 10000).toFixed(1) + '万' : value.toLocaleString('zh-CN');
   const peakTpm = [1280000, 1210000, 420000, 310000, 260000, 380000, 220000, 170000, 640000, 2140000, 4780000, 5360000, 4120000, 2390000, 3720000, 5210000, 4980000, 4760000, 4690000, 4480000, 4370000, 3940000, 1860000, 320000];
-  const callAnalysisCells = model => `<td>${model.name}</td><td>${model.requests.toLocaleString('zh-CN')}</td><td>¥${model.estimate.toFixed(2)}</td><td>¥${model.original.toFixed(2)}</td><td>${model.discount}</td><td>${tokenLabel(model.tokens)}</td><td>${tokenLabel(model.inputTokens)}</td><td>${tokenLabel(model.outputTokens)}</td><td>${tokenLabel(model.cacheWrite || 0)}</td><td>${tokenLabel(model.cacheRead || 0)}</td><td>${(model.cacheHitRate || 0).toFixed(1)}%</td><td>${model.latency || '0.00'} s</td><td><span class="success-count">${model.successRate.toFixed(2)}%</span> / <span class="failure-count">${model.failure}</span> 失败</td><td>${model.latest}</td>`;
+  const callAnalysisCells = model => `<td>${model.name}</td><td>${model.requests.toLocaleString('zh-CN')}</td><td><span class="success-count">${model.successRate.toFixed(2)}%</span> / <span class="failure-count">${model.failure}</span> 失败</td><td>¥${model.estimate.toFixed(2)}</td><td>¥${model.original.toFixed(2)}</td><td>${model.discount}</td><td>${model.rpm.toFixed(2)}</td><td>${model.tpm.toFixed(1)}</td><td>${tokenLabel(model.tokens)}</td><td>${tokenLabel(model.inputTokens)}</td><td>${tokenLabel(model.outputTokens)}</td><td>${tokenLabel(model.cacheWrite || 0)}</td><td>${tokenLabel(model.cacheRead || 0)}</td><td>${(model.cacheHitRate || 0).toFixed(1)}%</td><td>${model.latency || '0.00'} s</td><td>${model.latest}</td>`;
   const legend = target => { find(target).innerHTML = models.map(model => `<span><i style="background:${model.color}"></i>${model.name}</span>`).join(''); };
+
+  // 模型调用分析：分页渲染（先整体排序，再按页切片）
+  function paintCallRows(tbody, rows) {
+    if (rows) tbody._rows = rows;
+    const all = tbody._rows || [];
+    const pager = tbody.closest('.usage-call-analysis-card')?.querySelector('.usage-call-pager');
+    if (!pager) { tbody.innerHTML = all.map(model => `<tr>${callAnalysisCells(model)}</tr>`).join(''); return; }
+    const size = Number(pager.querySelector('select').value) || 10;
+    const pages = Math.max(1, Math.ceil(all.length / size));
+    const current = Math.min(Math.max(1, Number(pager.dataset.page) || 1), pages);
+    pager.dataset.page = current;
+    tbody.innerHTML = all.slice((current - 1) * size, current * size).map(model => `<tr>${callAnalysisCells(model)}</tr>`).join('');
+    pager.querySelector('.usage-details-total').textContent = `共 ${all.length} 条`;
+    pager.querySelector('.usage-call-page-label').textContent = `${current} / ${pages}`;
+    pager.querySelector('[data-call-page="prev"]').disabled = current <= 1;
+    pager.querySelector('[data-call-page="next"]').disabled = current >= pages;
+    if (!pager.dataset.bound) {
+      pager.dataset.bound = 'true';
+      pager.querySelector('select').addEventListener('change', () => { pager.dataset.page = 1; paintCallRows(tbody); });
+      pager.addEventListener('click', event => {
+        const step = event.target.closest('[data-call-page]')?.dataset.callPage;
+        if (!step) return;
+        pager.dataset.page = (Number(pager.dataset.page) || 1) + (step === 'next' ? 1 : -1);
+        paintCallRows(tbody);
+      });
+    }
+  }
 
   function renderTable() {
     const rows = [...models].sort((a, b) => {
       const result = sort.key === 'model' ? a.name.localeCompare(b.name) : sort.key === 'spend' ? spendTotal(a) - spendTotal(b) : a[sort.key] - b[sort.key];
       return sort.descending ? -result : result;
     });
-    find('#usageModelRows').innerHTML = rows.map(model => `<tr><td>${model.name}</td><td><div class="usage-success-rate"><span class="usage-success-track" aria-hidden="true"><i style="width:${model.successRate}%"></i></span><span>${model.successRate.toFixed(2)}%</span></div></td><td>${money(spendTotal(model))}</td><td>${model.requests}</td><td>${tokenLabel(model.tokens)}</td><td>${model.rpm.toFixed(2)}</td><td>${model.tpm.toFixed(1)}</td><td class="usage-outcomes"><span class="success-count">${model.success} 成功</span><span class="divider">/</span><span class="failure-count">${model.failure} 失败</span></td><td class="usage-share">${model.share.toFixed(2)}%</td><td class="usage-latest">${model.latest}</td></tr>`).join('');
+    const modelRows = find('#usageModelRows');
+    if (modelRows) modelRows.innerHTML = rows.map(model => `<tr><td>${model.name}</td><td><div class="usage-success-rate"><span class="usage-success-track" aria-hidden="true"><i style="width:${model.successRate}%"></i></span><span>${model.successRate.toFixed(2)}%</span></div></td><td>${money(spendTotal(model))}</td><td>${model.requests}</td><td>${tokenLabel(model.tokens)}</td><td>${model.rpm.toFixed(2)}</td><td>${model.tpm.toFixed(1)}</td><td class="usage-outcomes"><span class="success-count">${model.success} 成功</span><span class="divider">/</span><span class="failure-count">${model.failure} 失败</span></td><td class="usage-share">${model.share.toFixed(2)}%</td><td class="usage-latest">${model.latest}</td></tr>`).join('');
     const analysisRows = find('#usageCallAnalysisRows');
-    if (analysisRows) analysisRows.innerHTML = rows.map(model => `<tr>${callAnalysisCells(model)}</tr>`).join('');
+    if (analysisRows) paintCallRows(analysisRows, rows);
     const analysisHead = find('.usage-call-analysis-table thead tr');
     if (analysisHead && !analysisHead.dataset.sortable) {
       analysisHead.dataset.sortable = 'true';
-      const keys = ['requests', 'estimate', 'original', 'discount', 'tokens', 'inputTokens', 'outputTokens', 'cacheWrite', 'cacheRead', 'cacheHitRate', 'latency', 'successRate', 'latest'];
+      const keys = ['requests', 'successRate', 'estimate', 'original', 'discount', 'rpm', 'tpm', 'tokens', 'inputTokens', 'outputTokens', 'cacheWrite', 'cacheRead', 'cacheHitRate', 'latency', 'latest'];
       [...analysisHead.cells].slice(1).forEach((cell, index) => {
         const key = keys[index];
         cell.innerHTML = `<button type="button" data-call-sort="${key}">${cell.textContent.trim()} <svg class="usage-sort-icon" viewBox="0 0 24 28" aria-hidden="true"><path class="sort-up" d="M12 1 2 12h20L12 1Z"/><path class="sort-down" d="M12 27 22 16H2l10 11Z"/></svg></button>`;
         cell.querySelector('button').addEventListener('click', () => {
           rows.sort((a, b) => (a[key] > b[key] ? -1 : a[key] < b[key] ? 1 : 0));
-          analysisRows.innerHTML = rows.map(model => `<tr>${callAnalysisCells(model)}</tr>`).join('');
+          analysisRows.closest('.usage-call-analysis-card').querySelector('.usage-call-pager')?.setAttribute('data-page', '1');
+          paintCallRows(analysisRows, rows);
         });
       });
     }
