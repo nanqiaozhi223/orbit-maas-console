@@ -17,7 +17,7 @@
 .api-page .api-table th:nth-child(1){width:18%}.api-page .api-table th:nth-child(2){width:9%}.api-page .api-table th:nth-child(3){width:12%}.api-page .api-table th:nth-child(4){width:19%}.api-page .api-table th:nth-child(5){width:10%}.api-page .api-table th:nth-child(6){width:8%}.api-page .api-table th:nth-child(7){width:8%}.api-page .api-table th:nth-child(9){width:11%}.api-page .api-table th:nth-child(8){width:8%}.api-page .api-table th:nth-child(10){width:5%}
 .api-page .api-table th{height:54px;padding:10px 9px;color:var(--ui-text-muted);background:transparent;font-size:12px}
 .api-page .api-table td{height:76px;padding:11px 9px;line-height:1.45;overflow-wrap:anywhere}
-.api-page .api-table td:nth-child(5),.api-page .api-table td:nth-child(6),.api-page .api-table td:nth-child(9){white-space:nowrap}
+.api-page .api-table td:nth-child(5),.api-page .api-table td:nth-child(6),.api-page .api-table td.key-date{white-space:nowrap}
 .api-page .api-table td:last-child{text-align:center;background:rgba(226,232,240,.28)}
 .api-page .api-table th:last-child{text-align:center}
 .api-page .api-table .key-name code{margin-top:5px}
@@ -70,11 +70,11 @@
   .api-page .api-table td:first-child{grid-column:span 2}
   .api-page .api-table td:nth-child(4){grid-column:span 2}
   .api-page .api-table td:last-child{text-align:right;background:transparent}
-  .api-page .api-table td:nth-child(5):before{content:'本月调用量 · '}.api-page .api-table td:nth-child(6):before{content:'本月费用 · '}.api-page .api-table td:nth-child(9):before{content:'创建 · '}
-  .api-page .api-table td:nth-child(5):before,.api-page .api-table td:nth-child(6):before,.api-page .api-table td:nth-child(9):before{color:#64748b;font-size:11px}
+  .api-page .api-table td:nth-child(5):before{content:'本月调用量 · '}.api-page .api-table td:nth-child(6):before{content:'本月费用 · '}.api-page .api-table td.key-date:before{content:'创建 · '}
+  .api-page .api-table td:nth-child(5):before,.api-page .api-table td:nth-child(6):before,.api-page .api-table td.key-date:before{color:#64748b;font-size:11px}
 }
 @media(max-width:760px){.api-page .api-head{margin-bottom:20px}.api-page .api-toolbar{display:grid;gap:12px}.api-page .api-search{width:100%}.api-page .api-search input{flex:1;min-width:0}.api-page .api-actions{margin:0;justify-content:space-between}.api-page .api-note{max-width:60%}.api-page .api-actions .btn-dark{width:auto}.pool-grid,#keyModal .model-options{grid-template-columns:1fr}}
-@media(max-width:760px){.api-page .api-table tr{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 10px}.api-page .api-table td:nth-child(4){grid-column:span 2}.api-page .api-table td:nth-child(5),.api-page .api-table td:nth-child(6),.api-page .api-table td:nth-child(9){white-space:normal}}
+@media(max-width:760px){.api-page .api-table tr{grid-template-columns:repeat(2,minmax(0,1fr));gap:0 10px}.api-page .api-table td:nth-child(4){grid-column:span 2}.api-page .api-table td:nth-child(5),.api-page .api-table td:nth-child(6),.api-page .api-table td.key-date{white-space:normal}}
 @media(max-width:760px){.locked-model-grid{grid-template-columns:1fr}.locked-model-item:nth-last-child(2){border-bottom:1px solid #e2e8f0}}
 
 /* Shared console controls and readable supporting text. */
@@ -105,7 +105,7 @@
 .api-page .api-table td:nth-child(3),.api-page .api-table td:nth-child(4){color:var(--api-table-content);font-size:14px;font-weight:500}
 .api-page .api-table .route-note,.api-page .api-table .model-sub{color:var(--api-table-muted);font-size:13px;font-weight:400;line-height:1.4}
 .api-page .api-table td:nth-child(5),.api-page .api-table td:nth-child(6){color:var(--api-table-primary);font-size:14px;font-weight:500;font-variant-numeric:tabular-nums}
-.api-page .api-table td:nth-child(9){color:var(--api-table-muted);font-size:13px;font-weight:400;font-variant-numeric:tabular-nums}
+.api-page .api-table td.key-date{color:var(--api-table-muted);font-size:13px;font-weight:400;font-variant-numeric:tabular-nums}
 .api-page .api-table .filter-trigger{color:#94a3b8}
 .api-page .api-table .row-more{color:#64748b;display:inline-flex;align-items:center;justify-content:center;min-width:32px;height:32px;padding:0 6px;white-space:nowrap;line-height:1;letter-spacing:1px;flex:none}
 .api-page .api-table .row-more:hover{color:#17191f}
@@ -158,6 +158,11 @@
 .key-preference-trigger:focus-visible{outline:2px solid var(--ui-brand-strong);outline-offset:3px}
 :root[data-theme="dark"] .key-preference-menu{background:var(--ui-surface-start)}
 @media(max-width:760px){.key-preference{width:100%}}
+#keyModal .key-pref-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;align-items:start}
+#keyModal .key-pref-row>.form-section{margin-top:0;min-width:0}
+#keyModal .key-pref-row>.form-section[hidden]{display:none}
+#keyModal .key-pref-row .key-preference{width:100%}
+@media(max-width:640px){#keyModal .key-pref-row{grid-template-columns:1fr}}
 #keyModal .locked-quota-hint{display:inline;margin-left:10px;font-size:12px;line-height:1.6;font-weight:400;color:#b45309}
 :root[data-theme="dark"] #keyModal .locked-quota-hint{color:#fcd08d}
 #keyModal .locked-quota-hint{display:block;width:100%;margin:0 0 12px;padding:10px 12px;border-radius:10px;background:#fff3e8;color:#b45309;font-size:12px;line-height:1.6;font-weight:400}
@@ -173,8 +178,16 @@
 /* 团队视图：创建人列 */
 .api-page:not(.team-scope) .api-table .key-creator{display:none}
 .api-page .api-table td.key-creator{color:var(--api-table-content);font-size:14px;font-weight:500;white-space:nowrap}
+.api-page .api-table td.key-members{max-width:180px;overflow:hidden;text-overflow:ellipsis;font-weight:400}
 
 /* 业务 Key：加入其他管理员 */
+#keyModal .key-admins-hint{margin:-4px 0 10px;color:rgb(180,184,189);font-size:12px}
+#keyModal .key-admins-row{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;align-items:start}
+#keyModal .key-admins-row[hidden]{display:none}
+#keyModal .key-admins-row>.key-admins{margin-top:0;min-width:0}
+#keyModal .key-admins-row .admin-picker{max-width:none}
+#keyModal .key-admins-row .admin-picker-panel{position:absolute;top:100%;left:0;right:0;z-index:5}
+@media(max-width:640px){#keyModal .key-admins-row{grid-template-columns:1fr}}
 #keyModal .admin-picker{position:relative;max-width:420px}
 #keyModal .admin-picker-trigger{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;min-height:var(--ui-control-height);padding:0 12px;border:1px solid rgba(255,255,255,.85);border-radius:var(--ui-radius-sm);background:var(--ui-control);box-shadow:var(--ui-shadow-inset);color:var(--ui-text-muted);font:inherit;text-align:left;cursor:pointer}
 #keyModal .admin-picker-label.has-value{color:var(--ui-text)}
@@ -205,3 +218,18 @@
 :root[data-theme="dark"] #keyModal .admin-option:hover,:root[data-theme="dark"] #keyModal .admin-option:focus-within{background:#151b28}
 :root[data-theme="dark"] #keyModal .admin-option:has(input:checked),:root[data-theme="dark"] #keyModal .admin-chip{background:#1d2c12;border-color:#3f6212;color:#d9f99d}
 :root[data-theme="dark"] #keyModal .admin-avatar{background:#233818;color:#d9f99d}
+
+/* 列表横向滚动：操作列固定在最右侧（卡片式布局断点以上生效） */
+@media(min-width:1181px){
+  .api-page .api-table-scroll{overflow-x:auto;overscroll-behavior-x:contain}
+  .api-page .api-table{width:max-content;min-width:100%;table-layout:auto}
+  .api-page .api-table th,.api-page .api-table td{white-space:nowrap;overflow-wrap:normal}
+  .api-page .api-table th:nth-child(n){width:auto}
+  .api-page .api-table td:first-child{min-width:240px}
+  .api-page .api-table td:nth-child(4){min-width:220px;max-width:320px;white-space:normal}
+  .api-page .api-table td:nth-child(4) .model-sub{display:block;white-space:normal}
+  .api-page .api-table .key-actions{position:sticky;right:0;z-index:2;width:72px;min-width:72px;background:var(--ui-surface-end)!important;box-shadow:-10px 0 14px -12px rgba(15,23,42,.28)}
+  .api-page .api-table thead th.key-actions{z-index:3;background:#f1f3f6!important}
+  :root[data-theme="dark"] .api-page .api-table .key-actions{background:var(--ui-surface-end)!important;box-shadow:-10px 0 14px -12px rgba(0,0,0,.6)}
+  :root[data-theme="dark"] .api-page .api-table thead th.key-actions{background:#1b2230!important}
+}
