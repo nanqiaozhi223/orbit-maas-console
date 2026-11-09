@@ -51,7 +51,7 @@
   <link rel="stylesheet" href="assets/settings.css?v=2" />
   <link rel="stylesheet" href="assets/channels.css" />
   <link rel="stylesheet" href="assets/models.css?v=2" />
-<link rel="stylesheet" href="assets/model-square.css?v=14" />
+<link rel="stylesheet" href="assets/model-square.css?v=19" />
   <link rel="stylesheet" href="assets/system-info.css" />
   <link rel="stylesheet" href="assets/plugins.css" />
   <link rel="stylesheet" href="assets/users.css?v=5" />
@@ -249,6 +249,7 @@
   usagePage.after(dashboardPage);
   const dashboardFilter=dashboardPage.querySelector('.usage-filter');
   dashboardFilter.insertAdjacentHTML('afterbegin',`<div class="model-tabs dashboard-tabs" role="tablist" aria-label="统计类型"><button type="button" id="dashboardModelTab" role="tab" aria-selected="true" tabindex="0" class="active" data-dashboard-tab="model">模型用量</button><button type="button" id="dashboardUserTab" role="tab" aria-selected="false" tabindex="-1" data-dashboard-tab="user">用户统计</button></div>`);
+  dashboardFilter.querySelector('.dashboard-tabs').insertAdjacentHTML('afterend',`<div class="model-tabs dashboard-platform-tabs" role="tablist" aria-label="平台范围"><button type="button" role="tab" aria-selected="true" class="active">全部平台</button><button type="button" role="tab" aria-selected="false">业务平台</button></div>`);
   const dashboardTabs=[...dashboardFilter.querySelectorAll('[role="tab"]')];
   function selectDashboardTab(tab){dashboardPage.dataset.statistics=tab.dataset.dashboardTab;dashboardTabs.forEach(button=>{const active=button===tab;button.classList.toggle('active',active);button.setAttribute('aria-selected',String(active));button.tabIndex=active?0:-1;});}
   dashboardTabs.forEach((tab,index)=>{tab.addEventListener('click',()=>selectDashboardTab(tab));tab.addEventListener('keydown',event=>{let next;if(event.key==='ArrowRight'||event.key==='ArrowLeft')next=dashboardTabs[1-index];else if(event.key==='Home')next=dashboardTabs[0];else if(event.key==='End')next=dashboardTabs[1];if(next){event.preventDefault();selectDashboardTab(next);next.focus();}});});
@@ -377,7 +378,8 @@
     profile.after(wrap);
   })();
 </script>
-<script src="assets/model-square.js?v=5"></script>
+<script src="assets/model-square.js?v=6"></script>
+<script src="assets/square-channels.js?v=4"></script>
 <script src="assets/square-health-tip.js?v=2"></script>
 <script src="assets/model-rank.js?v=3"></script>
 <script>

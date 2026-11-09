@@ -195,3 +195,43 @@
 :root[data-theme="dark"] .square-health-tip-counts .is-ok{color:#4ade80}
 :root[data-theme="dark"] .square-health-tip-counts .is-fail{color:#f87171}
 :root[data-theme="dark"] .square-health-tip-counts .is-rate{color:#cbd5e1}
+
+/* 模型详情 · 服务渠道：可展开的价格明细与参数差异 */
+.square-channel-list{min-width:760px;overflow:hidden;border:1px solid var(--ui-border);border-radius:18px;background:rgba(255,255,255,.35)}
+.sq-ch-table{width:100%;border-collapse:collapse;font-size:13px}
+.sq-ch-table>thead th{padding:13px 18px;background:rgba(241,243,246,.72);color:var(--ui-text-muted);font-weight:650;text-align:left;border-bottom:1px solid var(--ui-border)}
+.sq-ch-table>tbody>tr>th,.sq-ch-table>tbody>tr>td{padding:14px 18px;text-align:left;border-bottom:1px solid var(--ui-border);vertical-align:middle}
+.sq-ch-table>tbody>tr:last-child>th,.sq-ch-table>tbody>tr:last-child>td{border-bottom:0}
+.sq-ch-table>tbody>tr>th{color:var(--ui-text);font-weight:700;white-space:nowrap}
+.sq-ch-row.is-open>th,.sq-ch-row.is-open>td{background:rgba(163,230,53,.10);border-bottom-color:transparent}
+.sq-ch-num{font-variant-numeric:tabular-nums;color:var(--ui-text);font-weight:600;white-space:nowrap}
+.sq-ch-plain{color:var(--ui-text-strong)}
+.sq-ch-same{color:var(--ui-text-muted)}
+.sq-ch-toggle{display:inline-flex;align-items:center;gap:6px;padding:4px 8px;margin:-4px -8px;border:0;border-radius:8px;background:transparent;color:var(--ui-brand-deep);font:inherit;font-weight:650;cursor:pointer}
+.sq-ch-toggle:hover{background:rgba(163,230,53,.14)}
+.sq-ch-toggle:focus-visible{outline:2px solid var(--ui-brand-strong);outline-offset:2px}
+.sq-ch-toggle svg{width:14px;height:14px;transition:transform .18s}
+.sq-ch-toggle[aria-expanded="true"] svg{transform:rotate(180deg)}
+.sq-ch-badge{display:inline-flex;align-items:center;padding:3px 9px;border-radius:999px;font-size:12px;font-weight:650;line-height:1.5;white-space:nowrap}
+.sq-ch-badge.is-warn{background:#fef3c7;color:#b45309}
+.sq-ch-badge.is-current{margin-left:8px;background:rgba(163,230,53,.22);color:var(--ui-brand-text)}
+.sq-ch-detail>td{padding:0 14px 14px!important;background:rgba(163,230,53,.10)}
+.sq-ch-panel{padding:14px 16px;border:1px solid var(--ui-border);border-radius:14px;background:var(--ui-surface-start)}
+.sq-ch-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+.sq-ch-panel-head strong{color:var(--ui-text);font-size:13px}
+.sq-ch-panel-head span{color:var(--ui-text-muted);font-size:12px}
+.sq-ch-sub{width:100%;border-collapse:collapse;font-size:13px}
+.sq-ch-sub th,.sq-ch-sub td{padding:10px 12px;text-align:left;border-bottom:1px solid var(--ui-border);vertical-align:middle}
+.sq-ch-sub thead th{color:var(--ui-text-muted);font-weight:600;font-size:12px}
+.sq-ch-sub tbody tr:last-child>*{border-bottom:0}
+.sq-ch-sub tbody th{font-weight:400;color:var(--ui-text-strong)}
+.sq-ch-sub tbody th b{color:var(--ui-text);font-weight:700}
+.sq-ch-sub tbody th small{display:block;margin-top:2px;color:var(--ui-text-muted);font-size:12px}
+.sq-ch-sub tbody th[rowspan]{border-right:1px solid var(--ui-border)}
+.sq-ch-sub tbody th .sq-ch-badge.is-current{margin:6px 0 0}
+.sq-ch-sub tbody th.is-last{border-bottom:0}
+.sq-ch-unit{margin:0;padding:10px 18px;border-top:1px solid var(--ui-border);color:var(--ui-text-muted);font-size:12px}
+:root[data-theme="dark"] .sq-ch-badge.is-warn{background:rgba(245,158,11,.16);color:#fbbf24}
+:root[data-theme="dark"] .sq-ch-badge.is-current{color:#bef264}
+:root[data-theme="dark"] .sq-ch-toggle{color:#bef264}
+.sq-ch-th-unit{margin-left:2px;color:var(--ui-text-muted);font-size:12px;font-weight:400}

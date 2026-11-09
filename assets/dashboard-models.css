@@ -3,6 +3,7 @@
 /* 筛选栏：第一行 统计类型标签；第二行 时间筛选 + 确认（左对齐），导出在该行最右侧 */
 #dashboardPage .usage-filter{flex-wrap:wrap;row-gap:7px} /* 换行占位元素会让行距计两次，合计 14px */
 #dashboardPage .usage-filter>.dashboard-tabs{order:0;margin:0}
+#dashboardPage .usage-filter>.dashboard-platform-tabs{order:2;margin:0}
 #dashboardPage .usage-filter>.usage-filter-break{order:1;flex-basis:100%;height:0}
 #dashboardPage .usage-filter>:not(.dashboard-tabs,.usage-export-btn,.usage-filter-break){order:2}
 #dashboardPage .usage-filter>#dashboard-usageFilterBtn{order:3}
