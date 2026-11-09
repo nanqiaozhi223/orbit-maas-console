@@ -45,12 +45,13 @@
   </style>
   <link rel="stylesheet" href="assets/design-system.css" />
   <link rel="stylesheet" href="assets/api-keys.css?v=13" />
-  <link rel="stylesheet" href="assets/usage.css?v=dashboard-tabs-6" />
-  <link rel="stylesheet" href="assets/logs.css" />
+  <link rel="stylesheet" href="assets/usage.css?v=dashboard-tabs-10" />
+  <link rel="stylesheet" href="assets/dashboard-models.css?v=8" />
+  <link rel="stylesheet" href="assets/logs.css?v=3" />
   <link rel="stylesheet" href="assets/settings.css?v=2" />
   <link rel="stylesheet" href="assets/channels.css" />
   <link rel="stylesheet" href="assets/models.css?v=2" />
-<link rel="stylesheet" href="assets/model-square.css?v=12" />
+<link rel="stylesheet" href="assets/model-square.css?v=14" />
   <link rel="stylesheet" href="assets/system-info.css" />
   <link rel="stylesheet" href="assets/plugins.css" />
   <link rel="stylesheet" href="assets/users.css?v=5" />
@@ -247,7 +248,7 @@
   dashboardPage.querySelectorAll('[id]').forEach(el=>{el.id=`dashboard-${el.id}`});
   usagePage.after(dashboardPage);
   const dashboardFilter=dashboardPage.querySelector('.usage-filter');
-  dashboardFilter.insertAdjacentHTML('afterbegin',`<div class="model-tabs dashboard-tabs" role="tablist" aria-label="统计类型"><button type="button" id="dashboardModelTab" role="tab" aria-selected="true" tabindex="0" class="active" data-dashboard-tab="model">模型调用分析</button><button type="button" id="dashboardUserTab" role="tab" aria-selected="false" tabindex="-1" data-dashboard-tab="user">用户统计</button></div>`);
+  dashboardFilter.insertAdjacentHTML('afterbegin',`<div class="model-tabs dashboard-tabs" role="tablist" aria-label="统计类型"><button type="button" id="dashboardModelTab" role="tab" aria-selected="true" tabindex="0" class="active" data-dashboard-tab="model">模型用量</button><button type="button" id="dashboardUserTab" role="tab" aria-selected="false" tabindex="-1" data-dashboard-tab="user">用户统计</button></div>`);
   const dashboardTabs=[...dashboardFilter.querySelectorAll('[role="tab"]')];
   function selectDashboardTab(tab){dashboardPage.dataset.statistics=tab.dataset.dashboardTab;dashboardTabs.forEach(button=>{const active=button===tab;button.classList.toggle('active',active);button.setAttribute('aria-selected',String(active));button.tabIndex=active?0:-1;});}
   dashboardTabs.forEach((tab,index)=>{tab.addEventListener('click',()=>selectDashboardTab(tab));tab.addEventListener('keydown',event=>{let next;if(event.key==='ArrowRight'||event.key==='ArrowLeft')next=dashboardTabs[1-index];else if(event.key==='Home')next=dashboardTabs[0];else if(event.key==='End')next=dashboardTabs[1];if(next){event.preventDefault();selectDashboardTab(next);next.focus();}});});
@@ -295,10 +296,9 @@
   const poolType={balanced:'均衡模型',economy:'经济模型',quality:'高质量模型'};
   modelSection.insertAdjacentHTML('beforeend',`<button type="button" class="pool-toggle" id="poolToggle" role="switch" aria-checked="false"><span><strong>高级设置 - 自定义模型池</strong><small>限定智能路由可选模型范围</small></span><span class="pool-switch" aria-hidden="true"></span></button><div class="pool-panel" id="poolPanel" hidden><div class="pool-grid">${poolModels.map(([id,name,provider,type])=>`<label class="pool-item"><input type="checkbox" name="pool" value="${id}" data-type="${type}" checked><span><strong>${name}</strong><small>${provider} · ${poolType[type]}</small></span></label>`).join('')}</div><div class="pool-valid" id="poolValid" role="status">高级设置受配额限制，总消耗超过限额时无法提供服务（如需继续使用请申请提额）</div></div><fieldset class="form-field locked-model-field" id="lockedModelField" hidden><legend>指定模型</legend><p class="locked-quota-hint">指定模型受配额限制，总消耗超过限额时无法提供服务（如需继续使用请申请提额）</p><div class="locked-model-grid">${poolModels.map(([id,name,provider,type],index)=>`<label class="locked-model-item"><input type="radio" name="lockedModel" value="${id}" ${index===0?'checked':''}><span><strong>${name}</strong><small>${provider} · ${poolType[type]}</small></span></label>`).join('')}</div></fieldset><fieldset class="form-field locked-model-field" id="businessModelField" aria-label="私有化模型" hidden><div class="locked-model-grid"><label class="locked-model-item"><input type="checkbox" name="businessModel" value="私有 Llama 3.1" checked><span><strong>私有 Llama 3.1</strong><small>并发 16 · QPS 40</small></span></label><label class="locked-model-item"><input type="checkbox" name="businessModel" value="Qwen 2.5 Coder 32B"><span><strong>Qwen 2.5 Coder 32B</strong><small>并发 12 · QPS 30</small></span></label></div></fieldset>`);
   const poolToggle=document.querySelector('#poolToggle'),poolPanel=document.querySelector('#poolPanel');
-  document.querySelector('#lockedModelField').insertAdjacentHTML('beforeend','<p class="model-cost-warning" id="modelCostWarning" hidden>高价模型可能快速消耗配额，超支后将触发告警，需申请提额。</p>');
   document.querySelectorAll('.filter-trigger').forEach(button=>{button.innerHTML='<svg viewBox="0 0 1024 1024" aria-hidden="true"><path d="M975.961 63.04A101.347 101.347 0 0 0 879.865 0.026H141.553a101.872 101.872 0 0 0-71.94 173.813l337.649 323.996v322.42a44.11 44.11 0 0 0 12.602 30.982l153.859 157.535a44.11 44.11 0 0 0 32.032 13.653 46.735 46.735 0 0 0 16.804-3.151 44.11 44.11 0 0 0 27.83-40.959v-482.58l305.618-321.896a101.872 101.872 0 0 0 19.954-110.8z" fill="currentColor"/></svg>';button.setAttribute('aria-label',`筛选${button.dataset.filter==='scene'?'场景':button.dataset.filter==='route'?'路由模式':'状态'}`)});
   function validatePool(){const selected=[...keyForm.querySelectorAll('[name=pool]:checked')];const valid=['balanced','economy','quality'].every(type=>selected.some(x=>x.dataset.type===type));const quotaNotice='高级设置受配额限制，总消耗超过限额时无法提供服务（如需继续使用请申请提额）';const status=document.querySelector('#poolValid');status.textContent=valid?quotaNotice:`请保留均衡、经济、高质量模型各至少 1 个。${quotaNotice}`;status.classList.toggle('invalid',!valid);return valid}
-  function syncKeyConfiguration(){const scene=keyForm.elements.scene.value,route=keyForm.elements.route.value,smart=scene==='office'&&route==='smart';keyForm.querySelectorAll('.choice').forEach(x=>x.classList.toggle('selected',x.querySelector('input').checked));keyForm.querySelectorAll('.model-option').forEach(x=>x.classList.toggle('selected',x.querySelector('input').checked));keyForm.querySelector('.model-options').hidden=scene==='business';poolToggle.hidden=!smart;poolPanel.hidden=!smart||poolToggle.getAttribute('aria-checked')!=='true';document.querySelector('#lockedModelField').hidden=scene!=='office'||route!=='locked';document.querySelector('#businessModelField').hidden=scene!=='business';const costly=[...keyForm.querySelectorAll('[name=lockedModel]:checked')].some(input=>poolModels.find(model=>model[0]===input.value)?.[3]==='quality');document.querySelector('#modelCostWarning').hidden=scene!=='office'||route!=='locked'||!costly;window.syncKeyAdmins?.(scene);window.syncKeyRoutePreference?.();validatePool()}
+  function syncKeyConfiguration(){const scene=keyForm.elements.scene.value,route=keyForm.elements.route.value,smart=scene==='office'&&route==='smart';keyForm.querySelectorAll('.choice').forEach(x=>x.classList.toggle('selected',x.querySelector('input').checked));keyForm.querySelectorAll('.model-option').forEach(x=>x.classList.toggle('selected',x.querySelector('input').checked));keyForm.querySelector('.model-options').hidden=scene==='business';poolToggle.hidden=!smart;poolPanel.hidden=!smart||poolToggle.getAttribute('aria-checked')!=='true';document.querySelector('#lockedModelField').hidden=scene!=='office'||route!=='locked';document.querySelector('#businessModelField').hidden=scene!=='business';window.syncKeyAdmins?.(scene);window.syncKeyRoutePreference?.();validatePool()}
   function resetKeyConfiguration(){poolToggle.setAttribute('aria-checked','false');keyForm.querySelectorAll('[name=pool]').forEach(x=>x.checked=true);keyForm.querySelectorAll('[name=lockedModel]').forEach((x,index)=>x.checked=index===0);syncKeyConfiguration()}
   function loadKeyConfiguration(k){keyForm.reset();keyForm.elements.name.value=k.name;keyForm.elements.scene.value=k.scene;keyForm.elements.route.value=k.scene==='business'?'locked':k.route;const preferenceMap={'智能均衡':'balanced','速度优先':'throughput','质量优先':'quality','成本优先':'price'};keyForm.elements.preference.value=preferenceMap[k.note]||(['balanced','price','throughput','latency','quality'].includes(k.note)?k.note:'balanced');const custom=Array.isArray(k.pool)&&k.pool.length>0;poolToggle.setAttribute('aria-checked',String(custom));keyForm.querySelectorAll('[name=pool]').forEach(x=>x.checked=!custom||k.pool.includes(x.value));if(k.scene==='business')keyForm.querySelectorAll('[name=businessModel]').forEach(input=>input.checked=(k.businessModels||[k.model]).includes(input.value));else if(k.route==='locked'){const selected=Array.isArray(k.lockedModels)&&k.lockedModels.length?k.lockedModels:k.model.split('、').map(name=>(poolModels.find(x=>x[1]===name)||[])[0]).filter(Boolean);keyForm.querySelectorAll('[name=lockedModel]').forEach((input,index)=>input.checked=selected.length?selected.includes(input.value):index===0)}window.syncKeyAdmins?.(k.scene,k.admins||[],k.owner||k.creator);window.loadKeyRoutePreference?.(k);syncKeyConfiguration()}
   poolToggle.addEventListener('click',()=>{poolToggle.setAttribute('aria-checked',String(poolToggle.getAttribute('aria-checked')!=='true'));syncKeyConfiguration()});
@@ -349,10 +349,11 @@
     });
   })();
 </script>
-<script src="assets/logs.js"></script>
-<script src="assets/usage.js?v=4"></script>
+<script src="assets/logs.js?v=2"></script>
+<script src="assets/usage.js?v=5"></script>
 <script src="assets/key-preference.js?v=4"></script>
 <script src="assets/usage-user-details.js"></script>
+  <script src="assets/dashboard-models.js?v=8"></script>
 <script src="assets/channels.js"></script>
 <script src="assets/models.js"></script>
 <script src="assets/system-info.js"></script>
@@ -376,7 +377,8 @@
     profile.after(wrap);
   })();
 </script>
-<script src="assets/model-square.js?v=2"></script>
+<script src="assets/model-square.js?v=5"></script>
+<script src="assets/square-health-tip.js?v=2"></script>
 <script src="assets/model-rank.js?v=3"></script>
 <script>
   // 默认进入模型广场，刷新后保持产品主入口一致。

@@ -35,7 +35,7 @@
 :root[data-theme="dark"] .filter-pop button,:root[data-theme="dark"] .row-menu button{color:#e2e8f0}:root[data-theme="dark"] .filter-pop button:hover,:root[data-theme="dark"] .filter-pop button.active,:root[data-theme="dark"] .row-menu button:hover{background:#253a17;color:#d9f99d}
 :root[data-theme="dark"] .choice small,:root[data-theme="dark"] .model-option small,:root[data-theme="dark"] .pool-item small,:root[data-theme="dark"] .locked-model-item small{color:#94a3b8}
 :root[data-theme="dark"] .pool-panel>p,:root[data-theme="dark"] .pool-item,:root[data-theme="dark"] .locked-model-item{border-color:#303a4d}
-:root[data-theme="dark"] .pool-valid{background:#382916;color:#fcd08d}:root[data-theme="dark"] .pool-valid.invalid,:root[data-theme="dark"] .model-cost-warning{background:#382916;color:#fcd08d;border-color:#785526}
+:root[data-theme="dark"] .pool-valid{background:#382916;color:#fcd08d}:root[data-theme="dark"] .pool-valid.invalid{background:#382916;color:#fcd08d;border-color:#785526}
 :root[data-theme="dark"] .locked-model-item.selected strong{color:#d9f99d}:root[data-theme="dark"] .model-type-balanced{color:#b9ed77}:root[data-theme="dark"] .model-type-economy{color:#9bd9c2}:root[data-theme="dark"] .model-type-quality{color:#fcd08d}
 :root[data-theme="dark"] .modal-panel .modal-head h2,:root[data-theme="dark"] .form-field label,:root[data-theme="dark"] .form-section h3{color:var(--ui-text)}
 @media(max-width:760px){:root[data-theme="dark"] .sidebar{background:#0d111a;border-color:#273043}}

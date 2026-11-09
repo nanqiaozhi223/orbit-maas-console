@@ -1,19 +1,21 @@
+// 日志类型标签（用量/使用日志 + 审计日志）：每个页面各自在页内切换，互不跳转
 (() => {
-  const page = document.querySelector('#logsPage');
+function setupLogTabs(page, prefix, usageLabel) {
   if (!page) return;
+  page.querySelector(':scope > .logs-tabs')?.remove();
   page.querySelector('.logs-filter-row select[aria-label="请求类型"]')?.closest('label').remove();
   const title = page.querySelector('.logs-title');
   const usage = document.createElement('div');
-  usage.id = 'usageLogPanel';
+  usage.id = `${prefix}usageLogPanel`;
   usage.setAttribute('role', 'tabpanel');
-  usage.setAttribute('aria-labelledby', 'usageLogTab');
+  usage.setAttribute('aria-labelledby', `${prefix}usageLogTab`);
   [...page.children].filter(child => child !== title).forEach(child => usage.append(child));
-  title.insertAdjacentHTML('afterend', `<div class="logs-tabs" role="tablist" aria-label="日志类型"><button id="usageLogTab" role="tab" aria-controls="usageLogPanel" aria-selected="true" tabindex="0">用量日志</button><button id="auditLogTab" role="tab" aria-controls="auditLogPanel" aria-selected="false" tabindex="-1">审计日志</button></div>`);
+  title.insertAdjacentHTML('afterend', `<div class="logs-tabs" role="tablist" aria-label="日志类型"><button type="button" id="${prefix}usageLogTab" role="tab" aria-controls="${prefix}usageLogPanel" aria-selected="true" tabindex="0">${usageLabel}</button><button type="button" id="${prefix}auditLogTab" role="tab" aria-controls="${prefix}auditLogPanel" aria-selected="false" tabindex="-1">审计日志</button></div>`);
   page.append(usage);
   const audit = document.createElement('div');
-  audit.id = 'auditLogPanel';
+  audit.id = `${prefix}auditLogPanel`;
   audit.setAttribute('role', 'tabpanel');
-  audit.setAttribute('aria-labelledby', 'auditLogTab');
+  audit.setAttribute('aria-labelledby', `${prefix}auditLogTab`);
   audit.hidden = true;
   audit.innerHTML = `<form class="audit-filter" aria-label="审计日志筛选">
       <div class="audit-filter-main"><label class="audit-range"><span class="sr-only">日期范围</span><div class="logs-date-control"><svg viewBox="0 0 1024 1024" aria-hidden="true"><path d="M475.42 600.18h73.16c20.48 0 36.58-16.55 36.58-37.55a36.69 36.69 0 0 0-36.58-37.49h-73.16c-20.48 0-36.58 16.5-36.58 37.49 0 21.05 16.1 37.55 36.58 37.55zM877.62 75.04H731.42V37.55C731.42 16.5 715.32 0 694.84 0s-36.58 16.5-36.58 37.55v37.49H365.68V37.5C365.68 16.5 349.64 0 329.16 0s-36.58 16.5-36.58 37.55v37.49H146.38C65.76 75.04 0 142.56 0 225.05v600.18c0 82.49 65.82 150.02 146.32 150.02h731.36c80.5 0 146.32-67.53 146.32-150.02V225.05c0-82.49-65.82-150.02-146.38-150.02zM950.78 825.2c0 41.24-32.94 74.98-73.16 74.98H146.32c-40.22 0-73.16-33.74-73.16-75.04V375.13h877.74V825.2h-.06zM73.16 300.04v-75.09c0-41.24 32.88-74.98 73.16-74.98h146.2v37.55c0 20.94 16.16 37.49 36.64 37.49 20.48 0 36.52-16.5 36.52-37.55v-37.49h292.64v37.55c0 20.99 16.1 37.55 36.58 37.55s36.58-16.55 36.58-37.55v-37.55h146.26c40.22 0 73.16 33.79 73.16 75.09v74.98H73.16z" fill="currentColor"/></svg><input type="date" name="start" aria-label="开始日期"><span class="audit-range-separator">～</span><input type="date" name="end" aria-label="结束日期"></div></label><label><span class="sr-only">分类</span><select name="category" aria-label="分类"><option value="">全部分类</option><option value="login">身份认证</option><option value="config">配置管理</option></select></label><label><span class="sr-only">请求 ID</span><input name="requestId" aria-label="请求 ID" placeholder="请求 ID"></label><div class="audit-actions"><button type="reset" class="btn-light">重置</button><button type="submit" class="btn-dark">搜索</button></div></div>
@@ -21,7 +23,7 @@
     </form>
     <section class="card audit-table-card"><div class="audit-table-wrap"><table class="audit-table"><thead><tr><th>时间</th><th>用户名</th><th>事件</th><th>IP</th><th>客户端</th><th>请求方法</th><th>路由</th><th>HTTP</th><th>结果</th><th>详情</th></tr></thead><tbody></tbody></table></div><div class="logs-pagination"><span class="logs-total" aria-live="polite"></span><label>每页行数 <select aria-label="审计日志每页行数"><option>20</option><option>50</option><option>100</option></select></label><button type="button" disabled aria-label="审计日志上一页">‹</button><span class="logs-page-label">1 / 1</span><button type="button" disabled aria-label="审计日志下一页">›</button></div></section>`;
   page.append(audit);
-  const tabs = [...page.querySelectorAll('.logs-tabs [role=tab]')];
+  const tabs = [...page.querySelectorAll(':scope > .logs-tabs [role=tab]')];
   function selectTab(tab) {
     tabs.forEach(item => { const selected = item === tab; item.setAttribute('aria-selected', String(selected)); item.tabIndex = selected ? 0 : -1; });
     usage.hidden = tab !== tabs[0];
@@ -62,7 +64,7 @@
       const status = document.createElement('span'); status.className = 'audit-result'; status.textContent = row.result === 'success' ? '成功' : '失败'; result.append(status);
       const action = tr.insertCell(); action.dataset.label = '详情';
       const button = document.createElement('button'); button.type = 'button'; button.className = 'audit-detail-toggle'; button.textContent = '查看'; button.setAttribute('aria-expanded', 'false'); button.setAttribute('aria-label', `查看 ${row.time} 的审计详情`);
-      const detail = document.createElement('tr'); detail.hidden = true; detail.className = 'audit-detail-row'; detail.id = `audit-detail-${row.requestId}`; button.setAttribute('aria-controls', detail.id);
+      const detail = document.createElement('tr'); detail.hidden = true; detail.className = 'audit-detail-row'; detail.id = `${prefix}audit-detail-${row.requestId}`; button.setAttribute('aria-controls', detail.id);
       const detailCell = detail.insertCell(); detailCell.colSpan = 10;
       const list = document.createElement('dl'); list.className = 'audit-detail-list';
       [['请求 ID',row.requestId],['HTTP',String(row.http)],['结果',status.textContent],['路由',row.route],['客户端',row.client]].forEach(([label,value]) => { const dt = document.createElement('dt'); dt.textContent = label; const dd = document.createElement('dd'); dd.textContent = value; list.append(dt,dd); });
@@ -82,4 +84,7 @@
   });
   form.addEventListener('reset', () => { applied = new FormData(); render(); audit.querySelector('.audit-feedback').textContent = ''; });
   render();
+}
+setupLogTabs(document.querySelector('#logsPage'), '', '用量日志');
+setupLogTabs(document.querySelector('#recordsPage'), 'records-', '使用日志');
 })();

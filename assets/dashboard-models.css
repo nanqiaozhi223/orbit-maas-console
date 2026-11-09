@@ -1,0 +1,101 @@
+/* 数据看板 · 模型用量（独立视图，不与"我的用量"共享内容） */
+
+/* 筛选栏：第一行 统计类型标签；第二行 时间筛选 + 确认（左对齐），导出在该行最右侧 */
+#dashboardPage .usage-filter{flex-wrap:wrap;row-gap:7px} /* 换行占位元素会让行距计两次，合计 14px */
+#dashboardPage .usage-filter>.dashboard-tabs{order:0;margin:0}
+#dashboardPage .usage-filter>.usage-filter-break{order:1;flex-basis:100%;height:0}
+#dashboardPage .usage-filter>:not(.dashboard-tabs,.usage-export-btn,.usage-filter-break){order:2}
+#dashboardPage .usage-filter>#dashboard-usageFilterBtn{order:3}
+#dashboardPage .usage-filter>.usage-export-btn{order:4;margin-left:auto}
+
+/* 模型用量标签：只显示新视图；用户统计标签：隐藏新视图 */
+#dashboardPage:not([data-statistics="user"])>:is(.usage-summary,.usage-call-analysis-card,.usage-chart-card,.usage-analysis-card,.usage-peak-card,.usage-department-card){display:none}
+#dashboardPage[data-statistics="user"]>.dashboard-model-view{display:none}
+#dashboardPage>.dashboard-model-view{display:grid;gap:20px;min-width:0;margin-top:-20px}
+
+/* KPI 卡 */
+.dashboard-model-view .usage-metric{display:flex;flex-direction:column;position:relative}
+.dashboard-model-view .usage-metric small+small{margin-top:4px}
+.dashboard-model-view .dm-metric-cost strong{color:var(--ui-brand-deep)}
+.dashboard-model-view .dm-metric-cost small:first-of-type{color:var(--ui-text-strong)}
+.dashboard-model-view .usage-metric-label{position:static}
+.dashboard-model-view .usage-metric-label{color:#526174!important}
+.dashboard-model-view .usage-metric small{color:#b4b8bd!important}
+.dm-info{display:inline-grid;place-items:center;width:16px;height:16px;margin-left:-3px;padding:0;border:1px solid #b4b8bd;border-radius:50%;background:transparent;color:#8a919b;font:600 10px/1 Inter,system-ui,sans-serif;cursor:help}
+.dm-info:hover,.dm-info:focus-visible{border-color:var(--ui-brand-deep);color:var(--ui-brand-deep)}
+.dm-info:focus-visible{outline:2px solid var(--ui-brand-strong);outline-offset:2px}
+.dm-tip{position:absolute;left:16px;right:16px;top:46px;z-index:5;padding:8px 10px;border-radius:10px;background:#0f172a;color:#fff;font-size:12px;font-weight:400;line-height:1.5;white-space:normal;opacity:0;visibility:hidden;transform:translateY(-4px);transition:opacity .15s,transform .15s,visibility .15s;pointer-events:none}
+.dm-info:hover+.dm-tip,.dm-info:focus-visible+.dm-tip{opacity:1;visibility:visible;transform:none}
+
+/* 模型汇总表 */
+.dm-card .usage-section-head{border-bottom:0;padding-block:18px}
+.dm-table-wrap{margin:0 22px;overflow-x:auto;border:0;border-radius:0}
+.dm-table{width:100%;min-width:1080px;border-collapse:collapse;table-layout:fixed;font-variant-numeric:tabular-nums}
+.dm-table>*>tr>th,.dm-table>*>tr>td{height:52px;padding:0 16px;border-bottom:1px solid var(--ui-border);text-align:left;font-size:13px;color:var(--ui-text-strong);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dm-table>thead>tr>th{height:46px;background:transparent;color:#0f172a;font-size:12px;font-weight:700}
+.dm-table>*>tr>th:first-child,.dm-table>*>tr>td:first-child{width:236px}
+.dm-table>*>tr>th:nth-child(2),.dm-table>*>tr>td:nth-child(2){width:96px}
+.dm-table>*>tr>th:nth-child(6),.dm-table>*>tr>td:nth-child(6){width:92px}
+.dm-table th button{display:inline-flex;align-items:center;gap:5px;padding:0;border:0;background:transparent;color:inherit;font:inherit;cursor:pointer}
+.dm-table th button:hover,.dm-table th button[aria-sort]{color:var(--ui-brand-deep)}
+.dm-table th button:focus-visible{outline:2px solid var(--ui-brand-strong);outline-offset:3px;border-radius:4px}
+.dm-table th button[aria-sort="ascending"] .sort-up,.dm-table th button[aria-sort="descending"] .sort-down{fill:var(--ui-brand-deep)}
+.dm-table tbody tr.dm-row:hover,.dm-table tbody tr.dm-row.is-open{background:rgba(163,230,53,.09)}
+.dm-table tbody>tr:last-child>td{border-bottom:0}
+.dm-cell{display:flex;align-items:center;gap:10px;min-width:0}
+.dm-table .dm-cell b{min-width:0;overflow:hidden;text-overflow:ellipsis;color:var(--ui-text);font-weight:600}
+.dm-toggle{display:inline-grid;place-items:center;flex:none;width:20px;height:20px;padding:0;border:1px solid #cfd5dc;border-radius:5px;background:var(--ui-surface-start);color:#6b7280;font-size:14px;line-height:1;cursor:pointer}
+.dm-toggle:hover{border-color:var(--ui-brand-strong);color:var(--ui-brand-deep)}
+.dm-toggle:focus-visible{outline:2px solid var(--ui-brand-strong);outline-offset:2px}
+.dm-row.is-open .dm-toggle{border-color:var(--ui-brand-strong);background:rgba(163,230,53,.18);color:var(--ui-brand-deep)}
+.dm-cost{color:var(--ui-brand-deep)!important;font-weight:600}
+.dm-discount{color:var(--ui-brand-text)!important}
+
+/* 展开：明细卡片（使用用户 / 渠道分析） */
+.dm-table>tbody>tr>td[colspan]{width:auto;border-right:0;height:auto;padding:12px 16px 16px;background:rgba(163,230,53,.05);white-space:normal;overflow:visible}
+.dm-detail{padding:14px 18px 10px;border:1px solid var(--ui-border);border-radius:14px;background:var(--ui-surface-start);box-shadow:0 1px 2px rgba(15,23,42,.04)}
+.dm-detail-tabs{display:inline-flex;align-items:center;gap:4px;height:40px;box-sizing:border-box;padding:4px;margin-bottom:12px;border:1px solid var(--ui-border);border-radius:20px;background:var(--ui-control);box-shadow:var(--ui-shadow-inset)}
+.dm-detail-tabs button{height:30px;padding:0 16px;border:0;border-radius:15px;background:transparent;color:var(--ui-text-muted);font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.dm-detail-tabs button:hover{color:var(--ui-text)}
+.dm-detail-tabs button[aria-selected="true"]{background:var(--ui-surface-start);color:var(--ui-text);box-shadow:var(--ui-shadow-raised)}
+.dm-detail-tabs button:focus-visible{outline:2px solid var(--ui-brand-strong);outline-offset:2px}
+.dm-sub-table{width:100%;border-collapse:collapse;table-layout:fixed;font-variant-numeric:tabular-nums}
+.dm-sub-table th,.dm-sub-table td{height:42px;padding:0 12px;border-bottom:1px solid #edf0f3;text-align:left;font-size:12px;color:var(--ui-text-strong);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dm-sub-table th{height:36px;color:var(--ui-text-muted);font-weight:600;border-bottom-color:#e3e8ec}
+.dm-sub-table tbody tr:last-child td{border-bottom:0}
+.dm-sub-table tbody tr:hover{background:rgba(163,230,53,.06)}
+.dm-users-table th:first-child,.dm-users-table td:first-child{width:220px;padding-left:0}
+.dm-channel-table th:first-child,.dm-channel-table td:first-child{width:12%;padding-left:0}
+.dm-channel-table th:nth-child(2),.dm-channel-table td:nth-child(2){width:15%}
+.dm-channel-table th:nth-child(7),.dm-channel-table td:nth-child(7){width:15%}
+.dm-sub-table .dm-num{color:var(--ui-text);font-weight:600}
+.dm-sub-table .dm-rate{color:var(--ui-brand-text);font-weight:600}
+.dm-sub-table th button{display:inline-flex;align-items:center;gap:5px;padding:0;border:0;background:transparent;color:inherit;font:inherit;cursor:pointer}
+.dm-sub-table th button:hover,.dm-sub-table th button[aria-sort]{color:var(--ui-brand-deep)}
+.dm-sub-table th button:focus-visible,.dm-help:focus-visible{outline:2px solid var(--ui-brand-strong);outline-offset:2px;border-radius:4px}
+.dm-sub-table th button[aria-sort="ascending"] .sort-up,.dm-sub-table th button[aria-sort="descending"] .sort-down{fill:var(--ui-brand-deep)}
+.dm-th-help{display:inline-flex;align-items:center;gap:5px}
+.dm-help{display:inline-grid;place-items:center;width:14px;height:14px;border:1px solid #b4b8bd;border-radius:50%;color:#8a919b;font-size:9px;font-weight:600;line-height:1;cursor:help}
+.dm-sub-table .dm-cell{gap:8px}
+.dm-sub-table .dm-cell small{color:var(--ui-text-muted);font-size:11px}
+.dm-sub-table .dm-cell b{font-weight:600;color:var(--ui-text)}
+.dm-avatar{display:inline-grid;place-items:center;flex:none;width:22px;height:22px;border-radius:50%;background:rgba(163,230,53,.28);color:var(--ui-brand-text);font-size:11px;font-weight:600}
+.dm-share{display:inline-block;width:72px;height:6px;margin-right:8px;border-radius:999px;background:#e9edf1;vertical-align:middle;overflow:hidden}
+.dm-share i{display:block;height:100%;border-radius:inherit;background:var(--ui-brand-strong)}
+.dm-users-more{margin:8px 0 0;color:var(--ui-text-muted);font-size:12px}
+.dm-pager{padding-top:14px}
+
+/* 深色模式 */
+:root[data-theme="dark"] .dm-table>thead>tr>th{background:#1b2230}
+:root[data-theme="dark"] .dm-table th,:root[data-theme="dark"] .dm-table td,:root[data-theme="dark"] .dm-sub-table th,:root[data-theme="dark"] .dm-sub-table td{border-color:#273043}
+:root[data-theme="dark"] .dm-share{background:#273043}
+
+@media(max-width:1180px){.dashboard-model-view .usage-summary{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media(max-width:760px){
+  .dashboard-model-view .usage-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .dm-table-wrap{margin:0 16px}
+}
+
+/* 我的用量 · 全部 + 预估费用 下的模型汇总 */
+#usagePage>.usage-model-summary{margin:0}
+#usagePage>.usage-model-summary[hidden]{display:none}

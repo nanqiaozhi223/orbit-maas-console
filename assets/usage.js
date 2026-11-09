@@ -56,6 +56,12 @@
   monthControl.innerHTML = '<span class="sr-only">统计月份</span><input type="month" aria-label="统计月份" value="2026-10">';
   departmentFilter.before(monthControl);
   monthControl.hidden = usagePage.dataset.costScope !== 'actual';
+  // 平台筛选：四种 费用类型 × 范围 组合下都显示
+  departmentFilter.insertAdjacentHTML('beforebegin', '<label class="usage-platform-filter"><span class="sr-only">平台</span><select aria-label="平台"><option value="all">全部平台</option><option value="default">AIToken(默认)</option><option value="jp">AIToken(JP)</option><option value="us">AIToken(US)</option></select></label>');
+  usagePage.querySelector('.usage-platform-filter select').addEventListener('change', event => {
+    usagePage.dataset.platform = event.target.value;
+    usagePage.dispatchEvent(new CustomEvent('usage-platform-change', { bubbles: true, detail: { platform: event.target.value } }));
+  });
   const rangeStart = new Date();
   rangeStart.setDate(rangeStart.getDate() - 6);
   usagePage.dataset.startDate = rangeStart.toISOString().slice(0, 10);
