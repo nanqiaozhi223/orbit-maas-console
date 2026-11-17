@@ -149,7 +149,15 @@
     showToast('已停用所选渠道');
     render();
   });
-  document.querySelector('#channelCreate').addEventListener('click', () => { resetForm(); dialog.showModal(); });
+  // 选择提供商后打开渠道表单，并预选对应供应商（选项不存在时补上）
+  window.openChannelForm = provider => {
+    resetForm();
+    const select = document.querySelector('#newChannelProvider');
+    if (provider && ![...select.options].some(option => option.value === provider)) select.add(new Option(provider, provider));
+    if (provider) select.value = provider;
+    dialog.showModal();
+  };
+  document.querySelector('#channelCreate').addEventListener('click', () => { window.openChannelDrawer ? window.openChannelDrawer() : window.openChannelForm(); });
   document.querySelector('#channelDialogClose').addEventListener('click', () => dialog.close());
   document.querySelector('#channelDialogCancel').addEventListener('click', () => dialog.close());
   dialog.addEventListener('close', resetForm);
