@@ -241,6 +241,8 @@
   }
 
   function usageTab(k) {
+    const range = view.usageRange || 'month';
+    const rangeLabel = range === '7d' ? '近 7 天' : range === '30d' ? '近 30 天' : '本月';
     const calls = Number(k.calls || 0);
     const success = calls ? 99.2 : 0;
     const tokens = Math.round(calls * 1.35);
@@ -257,18 +259,19 @@
       ['11-15 22:12', models[2].name, '渠道-备', '限流 429', '—', '¥0.00'],
       ['11-15 18:40', models[0].name, '渠道-主', '成功', '1.4s', '¥1.02']
     ];
-    return `<div class="uk-metrics">
-      <div class="uk-stat"><span>累计调用次数</span><strong>${calls.toLocaleString()}</strong><small>自创建以来</small></div>
+    return `<div class="uk-usage-toolbar"><h2 class="uk-section-title">使用统计</h2><label>时间范围<select id="ukUsageRange"><option value="month" ${range === 'month' ? 'selected' : ''}>本月</option><option value="7d" ${range === '7d' ? 'selected' : ''}>近 7 天</option><option value="30d" ${range === '30d' ? 'selected' : ''}>近 30 天</option></select></label></div>
+    <div class="uk-metrics">
+      <div class="uk-stat"><span>本月调用次数</span><strong>${calls.toLocaleString()}</strong></div>
       <div class="uk-stat"><span>本月 Token 消耗</span><strong>${tokens.toLocaleString()}</strong><small>输入 + 输出合计</small></div>
       <div class="uk-stat"><span>本月费用</span><strong>${money(k.cost)}</strong><small>按实际调用计费</small></div>
       <div class="uk-stat"><span>调用成功率</span><strong>${success}%</strong><small>最近 30 天</small></div>
     </div>
-    <h2 class="uk-section-title">调用趋势（近 12 天）</h2>
+    <h2 class="uk-section-title">调用趋势（${rangeLabel}）</h2>
     <div class="uk-chart" role="img" aria-label="近 12 天调用量柱状图">${trend.map((v, i) => `<div><i style="height:${v}%"></i><span>${i + 5}</span></div>`).join('')}</div>
     <h2 class="uk-section-title">按模型分布</h2>
-    <table class="uk-table" style="min-width:0"><thead><tr><th>模型</th><th>占比</th><th>费用</th></tr></thead><tbody>${models.map(m => `<tr><td>${esc(m.name)}</td><td class="uk-num">${m.share}%</td><td class="uk-num">${money(m.cost)}</td></tr>`).join('')}</tbody></table>
+    <div class="uk-table-card uk-model-records"><div class="uk-table-wrap"><table class="uk-table" style="min-width:0"><thead><tr><th>模型</th><th>占比</th><th>费用</th></tr></thead><tbody>${models.map(m => `<tr><td><strong>${esc(m.name)}</strong></td><td class="uk-num">${m.share}%</td><td class="uk-num">${money(m.cost)}</td></tr>`).join('')}</tbody></table></div></div>
     <h2 class="uk-section-title">最近调用记录</h2>
-    <table class="uk-table" style="min-width:0"><thead><tr><th>时间</th><th>模型</th><th>渠道</th><th>状态</th><th>延迟</th><th>费用</th></tr></thead><tbody>${records.map(r => `<tr>${r.map((c, i) => `<td${i ? ' class="uk-num"' : ''}>${esc(c)}</td>`).join('')}</tr>`).join('')}</tbody></table>`;
+    <div class="uk-table-card uk-usage-records"><div class="uk-table-wrap"><table class="uk-table" style="min-width:0"><thead><tr><th>时间</th><th>模型</th><th>渠道</th><th>状态</th><th>延迟</th><th>费用</th></tr></thead><tbody>${records.map(r => `<tr><td class="uk-num">${esc(r[0])}</td><td>${esc(r[1])}</td><td>${esc(r[2])}</td><td><span class="uk-status${r[3] === '成功' ? '' : ' expired'}"><i class="uk-dot"></i>${esc(r[3])}</span></td><td class="uk-num">${esc(r[4])}</td><td class="uk-num">${esc(r[5])}</td></tr>`).join('')}</tbody></table></div></div>`;
   }
 
   function auditTab(k) {
@@ -278,7 +281,7 @@
       { at: '2026-10-12 14:20', who: '平台管理员', act: '修改配置', detail: `RPM 由 300 调整为 ${Number(k.rpm || 600)}`, result: '成功' },
       { at: '2026-11-06 09:05', who: view.user.name, act: k.status === 'disabled' ? '停用 Key' : '启用 Key', detail: '用户自助操作', result: '成功' }
     ]).sort((a, b) => String(b.at).localeCompare(String(a.at)));
-    return `<ul class="uk-log">${logs.map(l => `<li><time>${esc(l.at)}</time><span>${esc(l.who)}</span><div><b>${esc(l.act)}</b><small>${esc(l.detail)} · ${esc(l.result)}</small></div></li>`).join('')}</ul>`;
+    return `<div class="uk-table-card uk-audit-records"><div class="uk-table-wrap"><table class="uk-table" style="min-width:0"><thead><tr><th>时间</th><th>操作者</th><th>操作</th><th>详情</th><th>结果</th></tr></thead><tbody>${logs.map(l => `<tr><td class="uk-num">${esc(l.at)}</td><td>${esc(l.who)}</td><td><strong>${esc(l.act)}</strong></td><td>${esc(l.detail)}</td><td><span class="uk-status"><i class="uk-dot"></i>${esc(l.result)}</span></td></tr>`).join('')}</tbody></table></div></div>`;
   }
 
   /* ============ 事件 ============ */
@@ -384,6 +387,7 @@
     $('ukDetailDialog').querySelectorAll('[data-act]').forEach(b => b.onclick = () => act(b.dataset.act, k));
     $('ukConfigForm')?.addEventListener('submit', e => { e.preventDefault(); saveConfig(k); });
     $('ukConfigForm')?.querySelector('[data-act="reset-config"]')?.addEventListener('click', () => renderDetail());
+    $('ukUsageRange')?.addEventListener('change', e => { view.usageRange = e.target.value; renderDetail(); });
   }
 
   function pageKeys() {
