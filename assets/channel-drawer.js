@@ -2,6 +2,7 @@
 (() => {
   const trigger = document.querySelector('#channelCreate');
   if (!trigger) return;
+  trigger.addEventListener('click', () => window.openChannelDrawer());
 
   // kind：builtin 内置 / plugin 插件 / gateway 网关 / custom 自定义；plugin 为附带的插件名
   const providers = [

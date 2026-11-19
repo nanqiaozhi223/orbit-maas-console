@@ -157,7 +157,7 @@
     if (provider) select.value = provider;
     dialog.showModal();
   };
-  document.querySelector('#channelCreate').addEventListener('click', () => { window.openChannelDrawer ? window.openChannelDrawer() : window.openChannelForm(); });
+  // 创建入口由侧拉栏接管；这里不再打开旧的居中表单弹窗。
   document.querySelector('#channelDialogClose').addEventListener('click', () => dialog.close());
   document.querySelector('#channelDialogCancel').addEventListener('click', () => dialog.close());
   dialog.addEventListener('close', resetForm);
