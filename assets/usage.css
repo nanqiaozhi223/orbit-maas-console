@@ -36,6 +36,7 @@
 .usage-month-control{display:flex;align-items:center;width:180px;height:42px;box-sizing:border-box;padding:0 14px;border:1px solid var(--ui-border);border-radius:999px;background:var(--ui-control);box-shadow:var(--ui-shadow-inset)}
 .usage-month-control[hidden]{display:none}
 .usage-month-control input{width:100%;min-width:0;border:0;background:transparent;color:var(--ui-text);font:inherit}
+:root[data-theme="dark"] .usage-month-control input::-webkit-calendar-picker-indicator{filter:invert(82%) sepia(9%) saturate(420%) hue-rotate(176deg) brightness(95%);opacity:.9}
 @media(max-width:480px){.usage-filter{flex-wrap:wrap}.usage-date-presets{width:100%;overflow-x:auto}.usage-month-control{width:100%}}
 .usage-ranking{display:grid;gap:12px;padding:20px 24px 10px}.usage-ranking-row{display:grid;grid-template-columns:150px minmax(0,1fr) 42px;align-items:center;gap:12px;font-size:12px}.usage-ranking-name{font-family:ui-monospace,SFMono-Regular,Menlo,monospace}.usage-ranking-track{height:9px;border-radius:99px;background:#e4e9ec;overflow:hidden}.usage-ranking-track i{display:block;height:100%;border-radius:99px}.usage-ranking-row strong{text-align:right;font-variant-numeric:tabular-nums}
 @media(max-width:1280px){.usage-summary{grid-template-columns:repeat(3,minmax(0,1fr))}}

@@ -1,0 +1,1153 @@
+/* ==========================================================================
+   深色主题统一规范层
+   --------------------------------------------------------------------------
+   1. 只作用于 :root[data-theme="dark"]，浅色模式零影响
+   2. 一律复用设计系统深色令牌（--ui-*），不另造第二套色板
+   3. 层级规范：
+        页面底      --ui-page
+        卡片/面板    --ui-surface-start / -end
+        内嵌区块     #1a2331
+        控件底       --ui-control (#111622)
+        悬停         #202b3b
+        描边         --ui-border (#273043) / 强描边 #3a4760
+        主文         --ui-text / 次文 #aab7c9 / 弱文 #8b98ad
+        品牌选中     #2a3b18 底 + #d9f99d 字
+        中性选中     #2b3749 底 + #fff 字
+   ========================================================================== */
+
+:root[data-theme="dark"] {
+  --dk-panel: #1a2331;
+  --dk-hover: #202b3b;
+  --dk-line-strong: #3a4760;
+  --dk-text-2: #aab7c9;
+  --dk-text-3: #8b98ad;
+  --dk-active: #2b3749;
+  --dk-brand-bg: #2a3b18;
+  --dk-brand-fg: #d9f99d;
+  --dk-warn-bg: #3a2b18;
+  --dk-warn-fg: #fcd08d;
+  --dk-danger-bg: #3a1d1f;
+  --dk-danger-fg: #fca5a5;
+}
+
+/* ==========================================================================
+   一、通用容器与表体
+   ========================================================================== */
+
+:root[data-theme="dark"] .models-table-wrap,
+:root[data-theme="dark"] .model-simple-table-wrap {
+  border: 1px solid var(--ui-border);
+  background: linear-gradient(145deg, var(--ui-surface-start), var(--ui-surface-end));
+  box-shadow: var(--ui-shadow-surface);
+}
+
+:root[data-theme="dark"] .models-table thead th,
+:root[data-theme="dark"] .model-simple-table thead th {
+  background: var(--dk-panel);
+  color: var(--dk-text-2);
+  border-bottom-color: var(--ui-border);
+}
+
+:root[data-theme="dark"] .models-table td,
+:root[data-theme="dark"] .model-simple-table td {
+  border-bottom-color: #212b3a;
+  color: var(--ui-text);
+}
+
+:root[data-theme="dark"] .models-table tbody tr:hover,
+:root[data-theme="dark"] .model-simple-table tbody tr:hover {
+  background: var(--dk-hover);
+}
+
+:root[data-theme="dark"] .model-detail-row > td {
+  background: #121926;
+}
+
+/* ==========================================================================
+   二、控件：输入 / 下拉 / 分页 / 行内操作
+   ========================================================================== */
+
+:root[data-theme="dark"] .models-pagination select,
+:root[data-theme="dark"] .model-page-controls button,
+:root[data-theme="dark"] .api-pagination button,
+:root[data-theme="dark"] .logs-pagination select,
+:root[data-theme="dark"] .logs-pagination button {
+  border: 1px solid var(--ui-border);
+  background: var(--ui-control);
+  color: var(--dk-text-2);
+}
+
+:root[data-theme="dark"] .model-page-controls button:hover,
+:root[data-theme="dark"] .api-pagination button:hover,
+:root[data-theme="dark"] .logs-pagination button:hover {
+  border-color: var(--dk-line-strong);
+  color: var(--ui-text);
+}
+
+:root[data-theme="dark"] .api-pagination button.active,
+:root[data-theme="dark"] .logs-pagination button.current {
+  background: var(--dk-active);
+  color: #fff;
+  border-color: var(--dk-line-strong);
+}
+
+:root[data-theme="dark"] .api-pagination span,
+:root[data-theme="dark"] .models-pagination,
+:root[data-theme="dark"] .logs-pagination {
+  color: var(--dk-text-3);
+}
+
+:root[data-theme="dark"] .model-row-actions button,
+:root[data-theme="dark"] .key-ops button {
+  border: 1px solid var(--ui-border);
+  background: var(--ui-control);
+  color: var(--dk-text-2);
+}
+
+:root[data-theme="dark"] .model-row-actions button:hover,
+:root[data-theme="dark"] .key-ops button:hover {
+  border-color: #4d7c0f;
+  color: var(--dk-brand-fg);
+}
+
+/* ==========================================================================
+   三、标签页 / 分段控件
+   ========================================================================== */
+
+:root[data-theme="dark"] .model-tabs,
+:root[data-theme="dark"] .api-page .api-scope-tabs,
+:root[data-theme="dark"] .square-code-tabs,
+:root[data-theme="dark"] .segmented,
+:root[data-theme="dark"] .usage-chart-switch {
+  border: 1px solid var(--ui-border);
+  background: var(--ui-control);
+  box-shadow: var(--ui-shadow-inset);
+}
+
+:root[data-theme="dark"] .model-tabs button,
+:root[data-theme="dark"] .api-page .api-scope-tabs button,
+:root[data-theme="dark"] .square-code-tabs button,
+:root[data-theme="dark"] .segmented button {
+  background: transparent;
+  color: var(--dk-text-3);
+}
+
+:root[data-theme="dark"] .model-tabs button:hover,
+:root[data-theme="dark"] .api-page .api-scope-tabs button:hover,
+:root[data-theme="dark"] .square-code-tabs button:hover,
+:root[data-theme="dark"] .segmented button:hover {
+  color: var(--ui-text);
+}
+
+:root[data-theme="dark"] .model-tabs button.active,
+:root[data-theme="dark"] .api-page .api-scope-tabs button.active,
+:root[data-theme="dark"] .square-code-tabs button.active,
+:root[data-theme="dark"] .segmented button.active {
+  background: var(--dk-active);
+  color: #fff;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, .45);
+}
+
+/* 模型广场工具栏的两个分组按钮 */
+:root[data-theme="dark"] .square-toolbar .model-tabs {
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+}
+
+:root[data-theme="dark"] .square-toolbar .model-tabs button {
+  border-radius: 999px;
+}
+
+:root[data-theme="dark"] .square-toolbar .square-sort.btn-light {
+  background: var(--ui-control);
+  border: 1px solid var(--ui-border);
+  color: var(--ui-text);
+  box-shadow: var(--ui-shadow-raised);
+}
+
+/* ==========================================================================
+   四、对话框与浮层
+   ========================================================================== */
+
+:root[data-theme="dark"] .model-dialog,
+:root[data-theme="dark"] .key-manage-dialog {
+  border: 1px solid var(--ui-border);
+  background: linear-gradient(145deg, var(--ui-surface-start), var(--ui-surface-end));
+  box-shadow: 0 30px 80px rgba(0, 0, 0, .55);
+  color: var(--ui-text);
+}
+
+:root[data-theme="dark"] .model-dialog .close {
+  background: var(--ui-control);
+  color: var(--dk-text-2);
+  border: 1px solid var(--ui-border);
+}
+
+:root[data-theme="dark"] .model-dialog .form-field label {
+  color: var(--dk-text-2);
+}
+
+:root[data-theme="dark"] .model-dialog .form-field input,
+:root[data-theme="dark"] .model-dialog .form-field select {
+  border: 1px solid var(--ui-border);
+  background: var(--ui-control);
+  color: var(--ui-text);
+}
+
+:root[data-theme="dark"] .key-manage-row {
+  border-bottom-color: #212b3a;
+  color: var(--ui-text);
+}
+
+:root[data-theme="dark"] .key-action-menu {
+  border: 1px solid var(--ui-border);
+  background: #171e2b;
+  box-shadow: 0 18px 32px rgba(0, 0, 0, .55);
+}
+
+:root[data-theme="dark"] .key-action-menu button {
+  color: var(--dk-text-2);
+}
+
+:root[data-theme="dark"] .key-action-menu button:hover {
+  background: var(--dk-brand-bg);
+  color: var(--dk-brand-fg);
+}
+
+:root[data-theme="dark"] .key-action-menu .danger {
+  color: var(--dk-danger-fg);
+}
+
+:root[data-theme="dark"] .key-action-menu .danger:hover {
+  background: var(--dk-danger-bg);
+}
+
+/* ==========================================================================
+   五、提示条 / Toast
+   ========================================================================== */
+
+:root[data-theme="dark"] .sp-toast,
+:root[data-theme="dark"] .uk-toast,
+:root[data-theme="dark"] .key-manage-toast {
+  border: 1px solid var(--ui-border);
+  background: #1f2836;
+  color: var(--ui-text);
+  box-shadow: 0 18px 32px rgba(0, 0, 0, .5);
+}
+
+:root[data-theme="dark"] .sp-toast.err {
+  background: #4b1d1f;
+  border-color: #7f2a2d;
+  color: #fecaca;
+}
+
+:root[data-theme="dark"] .dm-tip {
+  background: #1f2836;
+  border: 1px solid var(--ui-border);
+  color: var(--ui-text);
+}
+
+/* ==========================================================================
+   六、开关
+   ========================================================================== */
+
+:root[data-theme="dark"] .channel-switch,
+:root[data-theme="dark"] .sp-switch input {
+  border: 1px solid var(--dk-line-strong);
+  background: #2b3547;
+}
+
+:root[data-theme="dark"] .channel-switch i,
+:root[data-theme="dark"] .sp-switch input::after {
+  background: #cbd5e1;
+}
+
+:root[data-theme="dark"] .channel-switch[aria-checked="true"],
+:root[data-theme="dark"] .sp-switch input:checked {
+  background: #4d7c0f;
+  border-color: #65a30d;
+}
+
+:root[data-theme="dark"] .channel-switch[aria-checked="true"] i,
+:root[data-theme="dark"] .sp-switch input:checked::after {
+  background: #f4ffe0;
+}
+
+/* ==========================================================================
+   七、头像 / 徽标 / 标记
+   ========================================================================== */
+
+:root[data-theme="dark"] .perm-avatar.tone-0 {
+  background: #263042;
+  color: #cbd5e1;
+}
+
+:root[data-theme="dark"] .perm-avatar.tone-1 {
+  background: var(--dk-brand-bg);
+  color: var(--dk-brand-fg);
+}
+
+:root[data-theme="dark"] .perm-avatar.tone-2 {
+  background: var(--dk-warn-bg);
+  color: var(--dk-warn-fg);
+}
+
+:root[data-theme="dark"] .perm-avatar.tone-3 {
+  background: #202a3a;
+  color: var(--dk-text-2);
+  box-shadow: inset 0 0 0 1px #303c50;
+}
+
+:root[data-theme="dark"] .channel-provider-mark {
+  background: #1f2836;
+  color: #dbe3ee;
+  border: 1px solid var(--ui-border);
+}
+
+/* ==========================================================================
+   八、模型广场详情页
+   ========================================================================== */
+
+:root[data-theme="dark"] .square-detail-stats > div,
+:root[data-theme="dark"] .square-channel-card,
+:root[data-theme="dark"] .square-rank-card {
+  border: 1px solid var(--ui-border);
+  background: var(--ui-surface-start);
+  box-shadow: var(--ui-shadow-raised);
+  color: var(--ui-text);
+}
+
+:root[data-theme="dark"] .square-rank-card.is-featured {
+  border-color: #4d7c0f;
+  background: linear-gradient(145deg, #1d2a15, #16210f);
+}
+
+:root[data-theme="dark"] .square-rank-icon {
+  border: 1px solid var(--ui-border);
+  background: #1f2836;
+}
+
+:root[data-theme="dark"] .square-channel-card h2,
+:root[data-theme="dark"] .square-detail-stats strong,
+:root[data-theme="dark"] .square-detail-name {
+  color: var(--ui-text);
+}
+
+:root[data-theme="dark"] .square-channel-card h2 span {
+  border: 1px solid var(--ui-border);
+  background: var(--ui-control);
+  color: var(--ui-text);
+}
+
+:root[data-theme="dark"] .square-channel-table {
+  border-color: var(--ui-border);
+  background: var(--dk-panel);
+}
+
+:root[data-theme="dark"] .square-channel-table > div {
+  border-color: var(--ui-border);
+  color: var(--ui-text);
+}
+
+:root[data-theme="dark"] .square-channel-table > div:nth-child(-n+5) {
+  background: #1f2836;
+  color: var(--dk-text-2);
+}
+
+:root[data-theme="dark"] .square-channel-table b {
+  background: #23304a;
+  color: #c8d4e6;
+}
+
+:root[data-theme="dark"] .square-channel-table .warn {
+  color: #e2c789;
+}
+
+:root[data-theme="dark"] .square-channel-table .warn .unsupported {
+  color: #f3bb4d;
+}
+
+:root[data-theme="dark"] .square-channel-table .ok {
+  color: #a3e635;
+}
+
+:root[data-theme="dark"] .square-detail-tip {
+  border: 1px solid rgba(132, 204, 22, .45);
+  background: linear-gradient(145deg, #1d2a15, #16210f);
+  box-shadow: var(--ui-shadow-raised);
+  color: #d7e8b8;
+}
+
+:root[data-theme="dark"] .square-detail-tip strong {
+  color: #bef264;
+}
+
+:root[data-theme="dark"] .square-code-block,
+:root[data-theme="dark"] .square-api-page pre,
+:root[data-theme="dark"] .square-api-callout {
+  border: 1px solid var(--ui-border);
+  background: var(--ui-control);
+  box-shadow: inset 0 1px 2px rgba(0, 0, 0, .4);
+  color: #dbe3ee;
+}
+
+:root[data-theme="dark"] .square-code-copy:hover {
+  background: var(--dk-hover);
+  color: #a3e635;
+}
+
+:root[data-theme="dark"] .square-api-callout {
+  color: var(--dk-text-2);
+}
+
+:root[data-theme="dark"] .square-api-params {
+  border: 1px solid var(--ui-border);
+  background: var(--dk-panel);
+}
+
+:root[data-theme="dark"] .square-api-params > div {
+  border-bottom-color: var(--ui-border);
+}
+
+:root[data-theme="dark"] .square-api-params > div:first-child {
+  background: #1f2836;
+  color: var(--dk-text-2);
+}
+
+:root[data-theme="dark"] .square-api-params i {
+  background: #23304a;
+  color: #93c5fd;
+}
+
+:root[data-theme="dark"] .square-api-params span,
+:root[data-theme="dark"] .square-api-params strong {
+  color: var(--dk-text-2);
+}
+
+:root[data-theme="dark"] .square-api-rate {
+  border-color: var(--ui-border);
+}
+
+:root[data-theme="dark"] .square-api-rate > * {
+  border-color: var(--ui-border);
+}
+
+:root[data-theme="dark"] .square-api-rate b {
+  background: #1f2836;
+  color: var(--dk-text-2);
+}
+
+:root[data-theme="dark"] .square-detail-page .square-detail-back,
+:root[data-theme="dark"] .square-api-back {
+  color: var(--dk-text-3);
+}
+
+:root[data-theme="dark"] .square-detail-page .square-detail-back:hover,
+:root[data-theme="dark"] .square-api-back:hover {
+  color: var(--ui-text);
+}
+
+/* ==========================================================================
+   九、模型页：定价编辑器
+   ========================================================================== */
+
+:root[data-theme="dark"] .mcd-tpl,
+:root[data-theme="dark"] .mcd-estimator,
+:root[data-theme="dark"] .mcd-tier {
+  border: 1px solid var(--ui-border);
+  background: var(--ui-surface-start);
+}
+
+:root[data-theme="dark"] .mcd-tier-head {
+  background: var(--dk-panel);
+  border-bottom: 1px solid var(--ui-border);
+}
+
+:root[data-theme="dark"] .mcd-tpl-chip {
+  border: 1px solid var(--ui-border);
+  background: var(--ui-control);
+  color: var(--dk-text-2);
+}
+
+:root[data-theme="dark"] .mcd-tpl-chip:hover {
+  border-color: #4d7c0f;
+  background: var(--dk-brand-bg);
+  color: var(--dk-brand-fg);
+}
+
+:root[data-theme="dark"] .mcd-tier-no,
+:root[data-theme="dark"] .mcd-rule-no {
+  background: #2b3547;
+  color: var(--dk-text-2);
+}
+
+:root[data-theme="dark"] .mcd-price input[type="number"],
+:root[data-theme="dark"] .mcd-inline-field input,
+:root[data-theme="dark"] .mcd-inline-field select,
+:root[data-theme="dark"] .mcd-rule input[type="text"],
+:root[data-theme="dark"] .mcd-rule label input,
+:root[data-theme="dark"] .mcd-est-field input {
+  border: 1px solid var(--ui-border);
+  background: var(--ui-control);
+  color: var(--ui-text);
+}
+
+:root[data-theme="dark"] .mcd-price input[type="number"]:disabled {
+  background: #1a2230;
+  color: #6b7a90;
+}
+
+:root[data-theme="dark"] .mcd-est-result {
+  border-color: #3b6fd4;
+  background: #17243c;
+  color: #dbeafe;
+}
+
+:root[data-theme="dark"] .mcd-est-badge {
+  background: #1e3a6b;
+  color: #bfdbfe;
+}
+
+:root[data-theme="dark"] .mcd-ghost {
+  border: 1px solid var(--ui-border);
+  background: var(--ui-control);
+  color: var(--dk-text-2);
+}
+
+:root[data-theme="dark"] .mcd-ghost:hover {
+  border-color: #4d7c0f;
+  color: var(--dk-brand-fg);
+}
+
+:root[data-theme="dark"] .mcd-btn.primary,
+:root[data-theme="dark"] .sp-primary {
+  border: 1px solid #4d7c0f;
+  background: var(--dk-brand-bg);
+  color: var(--dk-brand-fg);
+}
+
+:root[data-theme="dark"] .mcd-btn.primary:hover,
+:root[data-theme="dark"] .sp-primary:hover {
+  background: #354d22;
+}
+
+:root[data-theme="dark"] .mcd-chip.on,
+:root[data-theme="dark"] .mcd-pick-item.on {
+  border-color: #4d7c0f;
+  background: rgba(163, 230, 53, .14);
+  color: var(--dk-brand-fg);
+}
+
+:root[data-theme="dark"] .mcd-json-ok {
+  color: #a3e635;
+}
+
+/* ==========================================================================
+   十、概览 / 用量
+   ========================================================================== */
+
+:root[data-theme="dark"] .used-pill,
+:root[data-theme="dark"] #overviewPage .quota-main .used-pill,
+:root[data-theme="dark"] #settingsPage .settings-usage .quota-main .used-pill {
+  border: 1px solid rgba(163, 230, 53, .35);
+  background: #2a3f1a;
+  color: #e5f7c8 !important;
+}
+
+:root[data-theme="dark"] .used-pill:hover {
+  background: #354d22;
+}
+
+:root[data-theme="dark"] .filterbar .control,
+:root[data-theme="dark"] .filterbar select,
+:root[data-theme="dark"] .filterbar button,
+:root[data-theme="dark"] .filter-select-trigger {
+  border-color: var(--ui-border);
+  background: var(--ui-control);
+  color: var(--ui-text);
+}
+
+:root[data-theme="dark"] .filterbar .field label {
+  color: var(--dk-text-3);
+}
+
+:root[data-theme="dark"] #overviewPage .filterbar .query,
+:root[data-theme="dark"] #overviewPage .filterbar .btn-dark {
+  border: 1px solid #3a4a35;
+  background: #24331b;
+  color: #dcefc0;
+}
+
+:root[data-theme="dark"] #usagePage .usage-user-scope,
+:root[data-theme="dark"] #usagePage .usage-cost-scope {
+  border: 1px solid var(--ui-border);
+  background: var(--ui-control);
+  box-shadow: var(--ui-shadow-inset);
+}
+
+:root[data-theme="dark"] #usagePage .usage-user-scope button,
+:root[data-theme="dark"] #usagePage .usage-cost-scope button {
+  background: transparent;
+  color: var(--dk-text-3);
+}
+
+:root[data-theme="dark"] #usagePage .usage-user-scope button:hover,
+:root[data-theme="dark"] #usagePage .usage-cost-scope button:hover {
+  color: var(--ui-text);
+}
+
+:root[data-theme="dark"] #usagePage .usage-user-scope button.active,
+:root[data-theme="dark"] #usagePage .usage-cost-scope button.active {
+  border: 1px solid var(--dk-line-strong);
+  background: var(--dk-active);
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, .5);
+}
+
+/* ==========================================================================
+   十一、供应商 / 账单
+   ========================================================================== */
+
+:root[data-theme="dark"] .sp-switch {
+  border-color: var(--ui-border);
+  background: var(--ui-control);
+}
+
+:root[data-theme="dark"] .sp-step {
+  border: 1px solid var(--ui-border);
+  background: var(--ui-control);
+  color: var(--dk-text-3);
+}
+
+:root[data-theme="dark"] .sp-step.active {
+  border-color: #4d7c0f;
+  background: rgba(163, 230, 53, .12);
+  color: var(--ui-text);
+}
+
+:root[data-theme="dark"] .sp-step.done {
+  border-color: rgba(132, 204, 22, .45);
+  color: var(--dk-brand-fg);
+}
+
+:root[data-theme="dark"] .sp-step.done b {
+  background: rgba(132, 204, 22, .22);
+  color: var(--dk-brand-fg);
+}
+
+/* ==========================================================================
+   十二、细节收口
+   ========================================================================== */
+
+:root[data-theme="dark"] .square-detail-stats small {
+  color: var(--dk-text-3);
+}
+
+/* ==========================================================================
+   十三、主操作按钮与模型标记（深色下统一为品牌绿主按钮）
+   ========================================================================== */
+
+:root[data-theme="dark"] .btn-dark,
+:root[data-theme="dark"] .btn-brand,
+:root[data-theme="dark"] .model-confirm-button,
+:root[data-theme="dark"] .model-add-button,
+:root[data-theme="dark"] .mcd-btn.primary,
+:root[data-theme="dark"] .sp-primary,
+:root[data-theme="dark"] .api-page .btn-dark,
+:root[data-theme="dark"] .api-page .btn-brand {
+  border: 1px solid #a8e93a;
+  background: linear-gradient(145deg, #b5f83b, #8ad51f);
+  color: #10230a;
+  box-shadow: 0 6px 16px rgba(163, 230, 53, .22), inset 1px 1px 0 rgba(255, 255, 255, .35);
+}
+
+:root[data-theme="dark"] .btn-dark:hover,
+:root[data-theme="dark"] .btn-brand:hover,
+:root[data-theme="dark"] .model-confirm-button:hover,
+:root[data-theme="dark"] .model-add-button:hover,
+:root[data-theme="dark"] .mcd-btn.primary:hover,
+:root[data-theme="dark"] .sp-primary:hover,
+:root[data-theme="dark"] .api-page .btn-dark:hover,
+:root[data-theme="dark"] .api-page .btn-brand:hover {
+  background: linear-gradient(145deg, #c4ff55, #98e12b);
+}
+
+/* 模型厂商标记：浅底 → 深底同色系 */
+:root[data-theme="dark"] .model-mark {
+  background: var(--dk-brand-bg);
+  color: #b9e77a;
+}
+
+:root[data-theme="dark"] .model-mark.openai {
+  background: #1d2a3d;
+  color: #9fc3e8;
+}
+
+:root[data-theme="dark"] .model-mark.google {
+  background: #1b2f36;
+  color: #7fd3ea;
+}
+
+:root[data-theme="dark"] .model-mark.anthropic {
+  background: #33241d;
+  color: #e0a184;
+}
+
+/* 表格容器内边线与行悬停 */
+:root[data-theme="dark"] .models-table-card,
+:root[data-theme="dark"] .model-simple-table-card {
+  border-color: var(--ui-border);
+  background: linear-gradient(145deg, var(--ui-surface-start), var(--ui-surface-end));
+}
+
+/* ==========================================================================
+   十四、日志页与通用小徽标
+   ========================================================================== */
+
+:root[data-theme="dark"] .log-token strong {
+  background: #1f2836;
+  color: var(--dk-text-2);
+  box-shadow: var(--ui-shadow-raised);
+}
+
+:root[data-theme="dark"] .logs-filter-row,
+:root[data-theme="dark"] .logs-summary {
+  color: var(--dk-text-2);
+}
+
+:root[data-theme="dark"] .logs-filter-row input,
+:root[data-theme="dark"] .logs-filter-row select {
+  border: 1px solid var(--ui-border);
+  background: var(--ui-control);
+  color: var(--ui-text);
+}
+
+:root[data-theme="dark"] .log-avatar {
+  color: #0f172a;
+}
+
+/* ==========================================================================
+   十五、深色下翻转「浅色模式专用」的黑色文本强制覆盖
+   （text-color-overrides.css 为了浅色高对比大面积写死 #000 !important，
+     深色模式必须等优先级覆盖，否则表格字直接消失）
+   ========================================================================== */
+
+:root[data-theme="dark"] #logsPage .logs-table-card,
+:root[data-theme="dark"] #logsPage .logs-table-card td,
+:root[data-theme="dark"] #logsPage .logs-table-card small {
+  color: var(--ui-text) !important;
+}
+
+:root[data-theme="dark"] #logsPage .logs-table-card th {
+  color: var(--dk-text-3) !important;
+}
+
+:root[data-theme="dark"] #usagePage .usage-model-card,
+:root[data-theme="dark"] #dashboardPage .usage-model-card,
+:root[data-theme="dark"] #usagePage .usage-model-card .usage-section-head h2,
+:root[data-theme="dark"] #dashboardPage .usage-model-card .usage-section-head h2,
+:root[data-theme="dark"] #usagePage .usage-model-card .usage-table td,
+:root[data-theme="dark"] #dashboardPage .usage-model-card .usage-table td {
+  color: var(--ui-text) !important;
+}
+
+:root[data-theme="dark"] #usagePage .usage-model-card .usage-section-head p,
+:root[data-theme="dark"] #dashboardPage .usage-model-card .usage-section-head p,
+:root[data-theme="dark"] #usagePage .usage-model-card .usage-table thead th,
+:root[data-theme="dark"] #dashboardPage .usage-model-card .usage-table thead th,
+:root[data-theme="dark"] #usagePage .usage-model-card .usage-table thead th button,
+:root[data-theme="dark"] #dashboardPage .usage-model-card .usage-table thead th button {
+  color: var(--dk-text-3) !important;
+}
+
+:root[data-theme="dark"] #usagePage .usage-call-analysis-card .usage-call-analysis-table td,
+:root[data-theme="dark"] #usagePage .usage-call-analysis-card .usage-call-analysis-table td * {
+  color: var(--ui-text) !important;
+  opacity: 1 !important;
+}
+
+:root[data-theme="dark"] #usagePage .usage-call-analysis-card .usage-call-analysis-table th,
+:root[data-theme="dark"] #usagePage .usage-call-analysis-card .usage-call-analysis-table th * {
+  color: var(--dk-text-3) !important;
+}
+
+:root[data-theme="dark"] #keyForm > .form-grid > .form-field > label,
+:root[data-theme="dark"] #keyForm > .form-section > h3,
+:root[data-theme="dark"] #keyForm > .key-admins-row > .form-section > h3,
+:root[data-theme="dark"] #keyForm > .key-pref-row > .form-section > h3 {
+  color: var(--dk-text-2) !important;
+}
+
+:root[data-theme="dark"] .dm-table > thead > tr > th {
+  color: var(--dk-text-3);
+}
+
+/* 用量/日志表格分隔线在深色下需要可见 */
+:root[data-theme="dark"] .usage-table th,
+:root[data-theme="dark"] .usage-table td,
+:root[data-theme="dark"] .logs-table-card th,
+:root[data-theme="dark"] .logs-table-card td {
+  border-bottom-color: #212b3a;
+}
+
+/* ==========================================================================
+   十六、创建 API Key 弹窗（#keyModal 内大量浅色写死，需 id 级覆盖）
+   ========================================================================== */
+
+:root[data-theme="dark"] #keyModal .model-option {
+  border: 1px solid var(--ui-border);
+  background: rgba(17, 22, 34, .72);
+  color: var(--ui-text);
+}
+
+:root[data-theme="dark"] #keyModal .model-option:hover {
+  border-color: var(--dk-line-strong);
+  background: #1a2331;
+}
+
+:root[data-theme="dark"] #keyModal .model-option.selected {
+  border-color: #84cc16;
+  background: #1d3213;
+  box-shadow: inset 0 0 0 1px rgba(132, 204, 22, .35);
+}
+
+:root[data-theme="dark"] #keyModal .model-option small {
+  color: #a9c98f;
+}
+
+:root[data-theme="dark"] #keyModal .model-option:not(.selected) small {
+  color: var(--dk-text-3);
+}
+
+/* 使用场景卡（choice） */
+:root[data-theme="dark"] #keyModal .choice {
+  border: 1px solid var(--ui-border);
+  background: rgba(17, 22, 34, .72);
+  color: var(--ui-text);
+}
+
+:root[data-theme="dark"] #keyModal .choice.selected {
+  border-color: #84cc16;
+  background: #1d3213;
+}
+
+:root[data-theme="dark"] #keyModal .choice small {
+  color: var(--dk-text-3);
+}
+
+/* 高级设置 - 自定义模型池 */
+:root[data-theme="dark"] #keyModal .pool-toggle,
+:root[data-theme="dark"] .pool-toggle {
+  border: 1px solid var(--ui-border);
+  background: #1a2331;
+  color: var(--ui-text);
+}
+
+:root[data-theme="dark"] #keyModal .pool-toggle strong,
+:root[data-theme="dark"] .pool-toggle strong {
+  color: var(--ui-text);
+}
+
+:root[data-theme="dark"] #keyModal .pool-toggle small,
+:root[data-theme="dark"] .pool-toggle small {
+  color: var(--dk-text-2);
+}
+
+:root[data-theme="dark"] #keyModal .pool-toggle[aria-checked="true"],
+:root[data-theme="dark"] .pool-toggle[aria-checked="true"] {
+  border-color: var(--ui-border);
+  border-bottom-color: transparent;
+  background: #1a2331;
+}
+
+:root[data-theme="dark"] .pool-switch {
+  border: 1px solid var(--dk-line-strong);
+  background: #2b3547;
+}
+
+:root[data-theme="dark"] .pool-switch:after {
+  background: #cbd5e1;
+}
+
+:root[data-theme="dark"] .pool-toggle[aria-checked="true"] .pool-switch {
+  background: #4d7c0f;
+  border-color: #65a30d;
+}
+
+:root[data-theme="dark"] .pool-panel,
+:root[data-theme="dark"] #keyModal .pool-panel {
+  border: 1px solid var(--ui-border);
+  border-top: 0;
+  background: #161e2b;
+}
+
+:root[data-theme="dark"] .pool-panel > p,
+:root[data-theme="dark"] #keyModal .pool-panel > p {
+  border-top-color: #212b3a;
+  color: var(--dk-text-2);
+}
+
+:root[data-theme="dark"] .pool-item,
+:root[data-theme="dark"] #keyModal .pool-item {
+  border-bottom-color: #212b3a;
+  color: var(--ui-text);
+}
+
+:root[data-theme="dark"] .pool-item small,
+:root[data-theme="dark"] #keyModal .pool-item small {
+  color: var(--dk-text-3);
+}
+
+:root[data-theme="dark"] .pool-item.selected,
+:root[data-theme="dark"] .pool-item:hover {
+  background: #1d2b1a;
+}
+
+/* 指定模型 → 锁定模型列表 */
+:root[data-theme="dark"] #keyModal #lockedModelField,
+:root[data-theme="dark"] #keyModal .locked-model-grid {
+  border: 1px solid var(--ui-border);
+  background: #161e2b;
+}
+
+:root[data-theme="dark"] #keyModal .locked-model-item {
+  border-bottom-color: #212b3a;
+  color: var(--ui-text);
+}
+
+:root[data-theme="dark"] #keyModal .locked-quota-hint {
+  border: 1px solid #6b4318;
+  background: var(--dk-warn-bg);
+  color: var(--dk-warn-fg);
+}
+
+:root[data-theme="dark"] .pool-valid {
+  border: 1px solid #6b4318;
+  background: var(--dk-warn-bg);
+  color: var(--dk-warn-fg);
+}
+
+/* 业务 Key：管理员选择器 */
+:root[data-theme="dark"] #keyModal .admin-picker-trigger {
+  border: 1px solid var(--ui-border);
+  background: var(--ui-control);
+  color: var(--ui-text);
+}
+
+:root[data-theme="dark"] #keyModal .admin-picker-panel {
+  border: 1px solid var(--ui-border);
+  background: #171e2b;
+  box-shadow: 0 18px 32px rgba(0, 0, 0, .55);
+}
+
+:root[data-theme="dark"] #keyModal .admin-picker-search {
+  background: var(--ui-control);
+}
+
+:root[data-theme="dark"] #keyModal .admin-option:hover,
+:root[data-theme="dark"] #keyModal .admin-option:focus-within {
+  background: #202b3b;
+}
+
+:root[data-theme="dark"] #keyModal .admin-option:has(input:checked) {
+  background: #1d3213;
+}
+
+:root[data-theme="dark"] #keyModal .admin-avatar {
+  background: var(--dk-brand-bg);
+  color: var(--dk-brand-fg);
+}
+
+:root[data-theme="dark"] #keyModal .admin-chip {
+  border: 1px solid #4d7c0f;
+  background: #1d3213;
+  color: var(--dk-brand-fg);
+}
+
+/* 弹窗底部按钮：id 级覆盖浅色规则 */
+:root[data-theme="dark"] #keyModal .btn-brand,
+:root[data-theme="dark"] #successModal .btn-brand,
+:root[data-theme="dark"] #keyModal .modal-foot .btn-brand {
+  border: 1px solid #a8e93a;
+  background: linear-gradient(145deg, #b5f83b, #8ad51f);
+  color: #10230a;
+  box-shadow: 0 6px 16px rgba(163, 230, 53, .22), inset 1px 1px 0 rgba(255, 255, 255, .35);
+}
+
+:root[data-theme="dark"] #keyModal .btn-light,
+:root[data-theme="dark"] #deleteModal .btn-light {
+  border: 1px solid var(--ui-border);
+  background: var(--ui-control);
+  color: var(--dk-text-2);
+}
+
+:root[data-theme="dark"] #deleteModal .btn-danger {
+  border: 1px solid #7f2a2d;
+  background: #4b1d1f;
+  color: #fecaca;
+}
+
+/* ==========================================================================
+   十七、模型广场详情页：新「服务渠道」可展开表格与 hero 徽标
+   （旧 .square-channel-table 已改名为 .square-channel-list + .sq-ch-table）
+   ========================================================================== */
+
+:root[data-theme="dark"] .square-detail-mark {
+  border: 1px solid var(--ui-border);
+  background: linear-gradient(145deg, #23304a, #1a2331);
+  color: #d9f99d;
+  box-shadow: var(--ui-shadow-raised);
+}
+
+:root[data-theme="dark"] .square-channel-list {
+  border: 1px solid var(--ui-border);
+  background: rgba(17, 22, 34, .72);
+}
+
+:root[data-theme="dark"] .sq-ch-table > thead th {
+  background: #1f2836;
+  color: var(--dk-text-3);
+  border-bottom-color: var(--ui-border);
+}
+
+:root[data-theme="dark"] .sq-ch-table > tbody > tr > th,
+:root[data-theme="dark"] .sq-ch-table > tbody > tr > td {
+  border-bottom-color: #212b3a;
+  color: var(--ui-text);
+}
+
+:root[data-theme="dark"] .sq-ch-row:hover > th,
+:root[data-theme="dark"] .sq-ch-row:hover > td {
+  background: var(--dk-hover);
+}
+
+:root[data-theme="dark"] .sq-ch-row.is-open > th,
+:root[data-theme="dark"] .sq-ch-row.is-open > td {
+  background: #1d2b1a;
+  border-bottom-color: transparent;
+}
+
+:root[data-theme="dark"] .sq-ch-detail > td {
+  background: #182415;
+}
+
+:root[data-theme="dark"] .sq-ch-panel {
+  border: 1px solid var(--ui-border);
+  background: #161e2b;
+}
+
+:root[data-theme="dark"] .sq-ch-sub th,
+:root[data-theme="dark"] .sq-ch-sub td {
+  border-bottom-color: #212b3a;
+}
+
+:root[data-theme="dark"] .sq-ch-sub thead th {
+  color: var(--dk-text-3);
+}
+
+:root[data-theme="dark"] .sq-ch-sub tbody th {
+  color: var(--dk-text-2);
+}
+
+:root[data-theme="dark"] .sq-ch-badge.is-warn {
+  background: var(--dk-warn-bg);
+  color: var(--dk-warn-fg);
+}
+
+:root[data-theme="dark"] .sq-ch-badge.is-current {
+  background: var(--dk-brand-bg);
+  color: var(--dk-brand-fg);
+}
+
+:root[data-theme="dark"] .sq-ch-unit {
+  border-top-color: var(--ui-border);
+  color: var(--dk-text-3);
+}
+
+:root[data-theme="dark"] .sq-ch-num,
+:root[data-theme="dark"] .sq-ch-plain {
+  color: var(--ui-text);
+}
+
+:root[data-theme="dark"] .sq-ch-same {
+  color: var(--dk-text-3);
+}
+
+/* 详情页其余浅色面板收口 */
+:root[data-theme="dark"] .square-api-page pre,
+:root[data-theme="dark"] .square-api-callout {
+  background: var(--ui-control);
+  border-color: var(--ui-border);
+  color: #dbe3ee;
+}
+
+:root[data-theme="dark"] .square-api-params {
+  background: rgba(17, 22, 34, .72);
+}
+
+:root[data-theme="dark"] .square-code-block {
+  background: var(--ui-control);
+  border-color: var(--ui-border);
+}
+
+:root[data-theme="dark"] .square-code-copy:hover {
+  background: var(--dk-hover);
+  color: var(--dk-brand-fg);
+}
+
+:root[data-theme="dark"] .square-rank-more:hover {
+  background: var(--dk-hover);
+  color: var(--dk-brand-fg);
+}
+
+:root[data-theme="dark"] .square-full-table tbody tr:hover {
+  background: var(--dk-hover);
+}
+
+/* ==========================================================================
+   十八、模型详情 · API 文档区（.square-api-page 卡片本体仍是浅色渐变）
+   ========================================================================== */
+
+:root[data-theme="dark"] .square-api-page {
+  border: 1px solid var(--ui-border);
+  background: linear-gradient(145deg, var(--ui-surface-start), var(--ui-surface-end));
+  box-shadow: var(--ui-shadow-surface);
+  color: var(--ui-text);
+}
+
+:root[data-theme="dark"] .square-api-page > p {
+  color: var(--dk-text-2);
+}
+
+:root[data-theme="dark"] .square-api-heading span {
+  color: #a3e635;
+}
+
+:root[data-theme="dark"] .square-api-heading h3 {
+  color: var(--ui-text);
+}
+
+:root[data-theme="dark"] .square-api-params > div {
+  border-bottom-color: #212b3a;
+}
+
+:root[data-theme="dark"] .square-api-params i {
+  border: 1px solid #2f4468;
+  background: #1d2a3f;
+  color: #9ec5fe;
+}
+
+:root[data-theme="dark"] .square-api-footnote {
+  color: var(--dk-text-3);
+}
+
+:root[data-theme="dark"] .square-api-footnote code {
+  background: var(--ui-control);
+  color: var(--dk-brand-fg);
+}
+
+:root[data-theme="dark"] .square-code-block pre,
+:root[data-theme="dark"] .square-code-block code {
+  color: #dbe3ee;
+}

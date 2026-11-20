@@ -42,6 +42,7 @@
 .logs-tabs{display:inline-flex;gap:4px;padding:5px;margin:0 0 24px;border:1px solid var(--ui-border);border-radius:24px;background:var(--ui-control);box-shadow:var(--ui-shadow-inset)}
 .logs-tabs button{height:36px;box-sizing:border-box;border:0;border-radius:16px;background:transparent;padding:0 20px;font-family:inherit;font-size:14px;font-weight:600;line-height:1.5;color:var(--ui-text-muted);cursor:pointer}
 #logsPage .logs-tabs button[aria-selected="true"],#recordsPage .logs-tabs button[aria-selected="true"]{color:var(--ui-text)!important;background:var(--ui-surface-start);box-shadow:var(--ui-shadow-raised)}
+:root[data-theme="dark"] #logsPage #usageLogTab[aria-selected="true"]{background:rgb(43,55,73)}
 .logs-tabs button:hover{color:var(--ui-text)}
 #usageLogPanel>.logs-summary{margin-bottom:2px}
 #usageLogPanel>.logs-filter-card{margin-top:-30px;margin-bottom:2px;padding:20px 10px}
