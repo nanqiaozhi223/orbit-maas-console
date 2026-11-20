@@ -100,16 +100,18 @@
 .square-rank-pill path{fill:none;stroke:#fff;stroke-width:2.4;stroke-linecap:round;stroke-linejoin:round}
 .square-rank-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:18px}
 .square-rank-illustration{position:absolute;right:4px;bottom:0;z-index:1;width:min(560px,calc(100cqw - 714px));height:auto;transform:translateY(0);pointer-events:none}
+.square-rank-illustration-dark{display:none}
 @container (max-width:1040px){.square-rank-illustration{display:none}}
 :root[data-theme="dark"] .square-rank-head h2,:root[data-theme="dark"] .square-rank-link{color:var(--ui-text)}
 :root[data-theme="dark"] .square-rank-head p,:root[data-theme="dark"] .square-rank-stat-meta{color:var(--ui-text-muted)}
-:root[data-theme="dark"] .square-rank-strip{border-left-color:#65a30d;background:linear-gradient(90deg,#24361a 0,#1d2c15 220px,rgba(21,26,38,0) 760px)}
+:root[data-theme="dark"] .square-rank-strip{height:190px;border-left-color:#65a30d;background:linear-gradient(90deg,#24361a 0,#1d2c15 34%,#18251a 58%,rgba(21,26,38,0) 100%)}
 :root[data-theme="dark"] .square-rank-stat-head,:root[data-theme="dark"] .square-rank-stat>strong{color:var(--ui-text)}
+:root[data-theme="dark"] .square-rank-stat{position:relative;z-index:3}
 :root[data-theme="dark"] .square-rank-crown{background:#233818;box-shadow:var(--ui-shadow-raised);color:#d9f99d}
 :root[data-theme="dark"] .square-rank-pill{background:rgba(0,0,0,.28);color:#d9f99d}
 :root[data-theme="dark"] .square-rank-pill circle{fill:#a3e635}
 :root[data-theme="dark"] .square-rank-pill path{stroke:#1d2c15}
-:root[data-theme="dark"] .square-rank-illustration{opacity:.16}
+:root[data-theme="dark"] .square-rank-illustration-light{display:none}:root[data-theme="dark"] .square-rank-illustration-dark{display:block;right:0;width:min(610px,calc(100cqw - 560px));z-index:2;opacity:1}
 .square-rank-card{position:relative;display:flex;flex-direction:column;min-width:0;padding:16px 18px;border:1px solid var(--ui-border);border-radius:var(--ui-radius-md);background:#fff;box-shadow:var(--ui-shadow-raised);overflow:hidden}
 .square-rank-card.is-featured{border-color:#d9efad;background:linear-gradient(145deg,#f7fde9,#eaf7cf)}
 .square-rank-card-head{display:flex;align-items:center;gap:10px}

@@ -20,7 +20,7 @@
     ok: ['正常', 'ok'], partial: ['部分异常', 'warn'], down: ['不可用', 'bad'],
     offhours: ['非服务时段', 'neutral'], nodata: ['无数据', 'off']
   };
-  const BILL_STATUS = { pending: ['待录入', 'neutral'], draft: ['待确认', 'warn'], settled: ['已结算', 'ok'] };
+  const BILL_STATUS = { pending: ['待录入', 'neutral'], draft: ['分摊中', 'warn'], settled: ['已结算', 'ok'] };
 
   const seed = () => {
     const ch = (id, supplierId, name, models, requests, tokens, estCost, success, latency, status) =>
@@ -173,8 +173,10 @@
   let toastTimer = null;
   const toast = (msg, isErr) => {
     const el = root.querySelector('#spToast'); if (!el) return;
-    el.textContent = msg; el.classList.toggle('err', !!isErr); el.classList.add('show');
-    clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+    const loading = msg === '正在计算成本分摊，请稍候';
+    el.innerHTML = loading ? `<span class="sp-toast-spinner" aria-hidden="true"></span><span>${esc(msg)}</span>` : esc(msg);
+    el.classList.toggle('loading', loading); el.classList.toggle('err', !!isErr); el.classList.add('show');
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => el.classList.remove('show'), loading ? 5000 : 2400);
   };
 
   /* ================= 样式片段 ================= */
@@ -520,9 +522,10 @@
     const diff = b.cny == null ? null : b.cny - b.est;
     const rate = b.currency === 'CNY' ? '1.0000' : Number(b.rate).toFixed(4);
     const chs = channelsOf(s).length;
-    const ops = b.status === 'pending' ? `<button data-act="bill-create" data-id="${s.id}" data-bill="${b.id}">录入账单</button>`
-      : b.status === 'draft' ? `<button data-act="bill-create" data-id="${s.id}" data-bill="${b.id}">继续结算</button><button data-act="bill-create" data-id="${s.id}" data-bill="${b.id}" data-edit="1">编辑账单</button>`
-        : `<button data-act="bill-detail" data-id="${b.id}">查看详情</button><button data-act="bill-fix" data-id="${b.id}">修正账单</button>`;
+    const stmt = `<button data-act="bill-statement" data-id="${b.id}">对账单</button>`;
+    const ops = b.status === 'pending' ? `<button data-act="bill-detail" data-id="${b.id}">详情</button>${stmt}<button data-act="bill-create" data-id="${s.id}" data-bill="${b.id}">录入账单</button>`
+      : b.status === 'draft' ? `<button data-act="bill-detail" data-id="${b.id}">详情</button>${stmt}`
+        : `<button data-act="bill-detail" data-id="${b.id}">详情</button>${stmt}<button data-act="bill-fix" data-id="${b.id}">修正账单</button>`;
     return `<tr>
       <td class="sp-sticky-l"><div class="sp-name">${logo(s)}<div><button data-act="detail" data-id="${s.id}"><b>${esc(s.name)}</b></button><small>${esc(s.id)}</small></div></div></td>
       <td>${monthText(b.month)}</td>
@@ -567,14 +570,10 @@
     const est = bill ? bill.est : estOf(s);
     return `<div class="sp-bill-dialog-body">
     <div class="sp-bill-dialog-head">
-      <div><h2>${isFix ? '修正账单' : step1 ? '录入账单' : '确认成本分摊'}</h2><p>${esc(s.name)} · ${monthText(d.month)}${isFix ? ` · 修正版本 v${(bill.version || 1) + 1}` : ''}</p></div>
+      <div><h2>${isFix ? '修正账单' : '录入账单'}</h2><p>${esc(s.name)} · ${monthText(d.month)}${isFix ? ` · 修正版本 v${(bill.version || 1) + 1}` : ''}</p></div>
       <button type="button" class="sp-dialog-x" data-act="back-settlement" aria-label="关闭">×</button>
     </div>
     <div class="sp-bill-dialog-scroll">
-    <div class="sp-steps">
-      <div class="sp-step ${step1 ? 'active' : 'done'}"><b>1</b>录入账单</div><span class="sp-step-line"></span>
-      <div class="sp-step ${!step1 ? 'active' : ''}"><b>2</b>确认成本分摊</div>
-    </div>
     ${isFix ? `<div class="sp-warn" style="margin-bottom:14px">修正账单会生成新版本，原已结算数据保留为历史版本，不影响已确认记录。</div>` : ''}
     ${step1 ? billStep1(s, d, est) : billStep2(s, d, est)}`;
   }
@@ -601,9 +600,6 @@
             <label>折算人民币金额
               <input type="text" id="spBillCny" value="${cny == null ? '—' : money(cny)}" readonly />
             </label>
-            <label class="wide">账单附件
-              <div class="sp-file"><input type="file" id="spBillFile" /><button type="button" class="sp-link" data-act="pick-file">选择文件</button><span class="name" id="spFileName">${esc(d.att || '未选择文件')}</span></div>
-            </label>
             <label class="wide">账单备注
               <textarea name="remark" placeholder="记录账单口径、异常说明等">${esc(d.remark || '')}</textarea>
             </label>
@@ -617,10 +613,9 @@
       </div>
     </div>
     <div class="sp-footbar">
-      <button class="sp-ghost" data-act="back-settlement">取消</button>
       <div class="right">
         <button class="sp-ghost" data-act="save-draft">保存草稿</button>
-        <button class="sp-primary" data-act="to-step2">下一步：确认成本分摊</button>
+        <button class="sp-primary" data-act="confirm-settle">确认结算</button>
       </div>
     </div>
     </div></div>`;
@@ -714,7 +709,9 @@
     <div class="sp-head">
       <div><h1>${esc(s.name)} · ${monthText(b.month)}</h1>
         <p>${statusBadge(b)} · 结算时间 ${b.settledAt || '—'} · 操作人 ${esc(b.operator || '—')}</p></div>
-      <div class="sp-head-actions"><button class="sp-ghost" data-act="export-one" data-id="${b.id}">导出账单</button><button class="sp-primary" data-act="bill-fix" data-id="${b.id}">修正账单</button></div>
+      <div class="sp-head-actions"><button class="sp-ghost" data-act="export-one" data-id="${b.id}">导出账单</button>${b.status === 'pending'
+        ? `<button class="sp-primary" data-act="bill-create" data-id="${s.id}" data-bill="${b.id}">录入账单</button>`
+        : `<button class="sp-primary" data-act="bill-fix" data-id="${b.id}">修正账单</button>`}</div>
     </div>
     <div class="sp-stats" style="grid-template-columns:repeat(6,minmax(0,1fr))">
       <div class="sp-stat"><span>实时预估成本</span><strong>${money(b.est)}</strong></div>
@@ -730,13 +727,15 @@
 
   function allocModelsRow(c, channelActual) {
     const models = c.models || [];
-    if (!models.length) return `<tr class="sp-subrow"><td colspan="9"><div class="sp-sub-empty">该渠道暂未关联模型</div></td></tr>`;
+    if (!models.length) return `<tr class="sp-subrow"><td colspan="8"><div class="sp-sub-empty">该渠道暂未关联模型</div></td></tr>`;
     const weights = models.map(m => Number(m.inP || 0) + Number(m.outP || 0) || 1);
     const sumW = weights.reduce((x, w) => x + w, 0) || 1;
     const est = Number(c.estCost || 0);
+    const factor = est ? channelActual / est : 1;
     const rows = models.map((m, i) => {
       const ratio = weights[i] / sumW;
       const mEst = est * ratio, mAct = channelActual * ratio, mDiff = mAct - mEst;
+      const inNew = Number(m.inP || 0) * factor, outNew = Number(m.outP || 0) * factor;
       return `<tr>
         <td><strong>${esc(m.name)}</strong></td>
         <td>${esc(m.type)}</td>
@@ -744,13 +743,15 @@
         <td class="num">${money(mEst)}</td>
         <td class="num"><strong>${money(mAct)}</strong></td>
         <td class="num ${diffCls(mDiff)}">${diffTxt(mDiff)}</td>
+        <td class="num">${money(m.inP)} / ${money(m.outP)}</td>
+        <td class="num"><strong>${money(inNew)} / ${money(outNew)}</strong></td>
       </tr>`;
     }).join('');
-    return `<tr class="sp-subrow"><td colspan="9">
+    return `<tr class="sp-subrow"><td colspan="8">
       <div class="sp-sub-wrap">
-        <div class="sp-sub-title">${esc(c.name)} · 模型分摊 <span>${models.length} 个模型 · 合计 ${money(channelActual)}</span></div>
+        <div class="sp-sub-title">${esc(c.name)} · 模型价格与成本对比 <span>${models.length} 个模型 · 预估 ${money(est)} · 分摊 ${money(channelActual)} · 修正系数 ${factor.toFixed(4)}</span></div>
         <table class="sp-subtable">
-          <thead><tr><th>模型名称</th><th>类型</th><th class="num">渠道内占比</th><th class="num">预估成本</th><th class="num">分摊金额</th><th class="num">成本差额</th></tr></thead>
+          <thead><tr><th>模型名称</th><th>类型</th><th class="num">渠道内占比</th><th class="num">预估成本</th><th class="num">分摊成本</th><th class="num">成本差额</th><th class="num">原始采购价（入 / 出）</th><th class="num">折算价格（入 / 出）</th></tr></thead>
           <tbody>${rows}</tbody>
         </table>
       </div>
@@ -759,20 +760,23 @@
 
   function billDetailTab(b, s) {
     if (st.bdTab === 'alloc') {
+      if (b.status === 'draft') return `<div class="sp-allocation-empty"><div class="sp-allocation-spinner" aria-hidden="true"></div><strong>正在计算成本分摊，请稍候</strong><p>分摊完成后，渠道成本明细会自动显示。</p></div>`;
+      if (b.status === 'pending') return `<div class="sp-allocation-empty"><strong>账单尚未录入</strong><p>录入供应商对账单金额后，系统按预估成本占比生成渠道分摊结果。</p></div>`;
       const chs = channelsOf(s);
       const cny = b.cny || 0;
       const totalUsage = chs.reduce((x, c) => x + Number(c.tokens || 0), 0) || 1;
       const totalEst = chs.reduce((x, c) => x + Number(c.estCost || 0), 0) || 1;
       const openSet = st.expandedAlloc || (st.expandedAlloc = new Set());
       return `<div class="sp-table-wrap" style="max-height:none"><table class="sp-table" style="min-width:940px">
-        <thead><tr><th>渠道</th><th class="num">模型数</th><th class="num">用量占比</th><th class="num">预估成本</th><th class="num">实际成本</th><th class="num">成本差额</th><th class="num">修正系数</th><th style="text-align:right">折算价格</th><th class="sp-alloc-toggle-head" aria-label="展开模型分摊"></th></tr></thead>
+        <thead><tr><th class="sp-alloc-toggle-head" aria-label="展开模型价格"></th><th>渠道</th><th class="num">模型数</th><th class="num">用量占比</th><th class="num">预估成本</th><th class="num">实际成本</th><th class="num">成本差额</th><th class="num">修正系数</th></tr></thead>
         <tbody>${chs.map(c => { const share = Number(c.estCost || 0) / totalEst, actual = cny * share, diff = actual - c.estCost; const open = openSet.has(c.id); return `<tr class="sp-ch-row${open ? ' is-open' : ''}">
+          <td class="sp-alloc-toggle"><button class="sp-expand" data-act="alloc-expand" data-ch="${c.id}" aria-expanded="${open}" aria-label="${open ? '收起' : '展开'} ${esc(c.name)} 的模型价格">›</button></td>
           <td><strong>${esc(c.name)}</strong><br><code style="font-size:10.5px;color:var(--ui-text-muted)">${esc(c.id)}</code></td>
           <td class="num">${(c.models || []).length}</td><td class="num">${(Number(c.tokens) / totalUsage * 100).toFixed(1)}%</td>
           <td class="num">${money(c.estCost)}</td><td class="num">${money(actual)}</td>
           <td class="num ${diffCls(diff)}">${diffTxt(diff)}</td><td class="num">${c.estCost ? (actual / c.estCost).toFixed(4) : '—'}</td>
-          <td><div class="sp-actions"><button data-act="price" data-ch="${c.id}">查看价格</button></div></td>
-          <td class="sp-alloc-toggle"><button class="sp-expand" data-act="alloc-expand" data-ch="${c.id}" aria-expanded="${open}" aria-label="${open ? '收起' : '展开'} ${esc(c.name)} 的模型分摊">›</button></td></tr>${open ? allocModelsRow(c, actual) : ''}`; }).join('')}</tbody></table></div>`;
+
+          </tr>${open ? allocModelsRow(c, actual) : ''}`; }).join('')}</tbody></table></div>`;
     }
     if (st.bdTab === 'adj') {
       const rows = b.adjust || [];
@@ -797,7 +801,7 @@
       <div><dt>账单备注</dt><dd>${esc(b.remark || '—')}</dd></div>
       <div><dt>结算时间</dt><dd>${b.settledAt || '—'}</dd></div>
       <div><dt>操作人</dt><dd>${esc(b.operator || '—')}</dd></div>
-      <div><dt>版本</dt><dd>v${b.version || 1}</dd></div>
+      <div><dt>版本</dt><dd>${b.status === 'pending' ? '—' : 'v' + (b.version || 1)}</dd></div>
     </dl>`;
   }
 
@@ -933,6 +937,7 @@
           case 'export-one': exportBill(id); return;
           case 'bill-create': openBillEntry(id, el.dataset.bill); return;
           case 'bill-detail': st.billId = id; st.view = 'billDetail'; st.bdTab = 'info'; render(); window.scrollTo({ top: 0 }); return;
+          case 'bill-statement': openStatement(id); return;
           case 'back-settlement':
             if (st.billOpen) { st.billOpen = false; st.draft = null; render(); return; }
             st.view = 'settlement'; render(); return;
@@ -1166,9 +1171,7 @@
   }
 
   function toStep2() {
-    const { ok } = validateBill();
-    if (!ok) { toast('请检查金额与汇率', true); return; }
-    st.step = 2; render(); window.scrollTo({ top: 0 });
+    confirmSettle();
   }
 
   function addAdjust() {
@@ -1193,6 +1196,19 @@
   }
 
   function confirmSettle() {
+    const { ok, d } = validateBill();
+    if (!ok) { toast('请检查金额与汇率', true); return; }
+    const b = billOf(d.billId) || { id: d.billId, supplierId: d.supplierId, month: d.month, est: estOf(supOf(d.supplierId)), records: [] };
+    if (!billOf(d.billId)) db.bills.push(b);
+    const cny = Number(d.amount) * Number(d.rate);
+    const adj = (d.adjust || []).reduce((x, a) => x + (a.type === 'pay' ? a.amount * a.rate : -a.amount * a.rate), 0);
+    Object.assign(b, { status: 'draft', currency: d.currency, rate: d.rate, amount: Number(d.amount), cny, adjust: d.adjust, settle: cny + adj, remark: d.remark, att: d.att, method: st.method, operator: '平台管理员' });
+    b.records = (b.records || []).concat({ at: now(), who: '平台管理员', act: '提交账单', detail: `实际结算 ${money(cny + adj)} · 成本分摊计算中`, result: '处理中' });
+    save();
+    st.billOpen = false; st.draft = null; st.view = 'settlement'; render(); toast('正在计算成本分摊，请稍候');
+  }
+
+  function confirmSettleDialog() {
     const d = readBillForm();
     const b = billOf(d.billId);
     const s = supOf(d.supplierId);
@@ -1260,6 +1276,48 @@
         <table class="sp-table" style="min-width:0;margin-top:14px"><thead><tr><th>模型</th><th>计价类型</th><th class="num">原始采购价</th><th class="num">原始倍率</th><th class="num">月度折算价</th><th>单位</th></tr></thead>
         <tbody>${rows.map(r => `<tr><td>${esc(r.name)}</td><td>${esc(r.type)}</td><td class="num">${money(r.inP)} / ${money(r.outP)}</td><td class="num">1.0000</td><td class="num"><strong>${money(r.inNew)} / ${money(r.outNew)}</strong></td><td>每 1M Tokens</td></tr>`).join('')}</tbody></table>
         <p class="sp-hint" style="margin-top:12px">月度折算价格仅用于实际成本核算，不会修改当前渠道线上计费规则。原始计价结构（含阶梯价、分时价）保持不变，仅在对应成本上乘以修正系数。</p>
+      </div>
+    </aside>`;
+    drawer.classList.add('open');
+    drawer.querySelectorAll('[data-close]').forEach(b2 => b2.onclick = () => drawer.classList.remove('open'));
+  }
+
+  function openStatement(billId) {
+    const b = billOf(billId); if (!b) return;
+    const s = supOf(b.supplierId); if (!s) return;
+    const adj = (b.adjust || []).reduce((sum, a) => sum + (a.type === 'pay' ? a.cny : -a.cny), 0);
+    const diff = b.cny == null ? null : b.cny - b.est;
+    const rate = b.currency === 'CNY' ? '1.0000' : Number(b.rate).toFixed(4);
+    const sym = CURRENCY[b.currency]?.sym || '';
+    const hasBill = b.amount != null;
+    const chs = channelsOf(s);
+    const totalEst = chs.reduce((x, c) => x + Number(c.estCost || 0), 0) || 1;
+    const rows = chs.map(c => {
+      const share = Number(c.estCost || 0) / totalEst;
+      const actual = (b.cny || 0) * share;
+      const d = actual - Number(c.estCost || 0);
+      return `<tr><td>${esc(c.name)}</td><td class="num">${money(c.estCost)}</td><td class="num"><strong>${money(actual)}</strong></td><td class="num ${diffCls(d)}">${diffTxt(d)}</td></tr>`;
+    }).join('');
+    const drawer = root.querySelector('#spDrawer');
+    drawer.innerHTML = `<div class="sp-drawer-mask" data-close></div><aside class="sp-drawer-panel">
+      <div class="sp-drawer-head"><div><h2>对账单</h2><p>${esc(s.name)} · ${monthText(b.month)} · ${BILL_STATUS[b.status][0]}</p></div><button class="sp-dialog-close" data-close>×</button></div>
+      <div class="sp-drawer-body">
+        <dl class="sp-dl" style="grid-template-columns:1fr 1fr">
+          <div><dt>对账单金额</dt><dd><strong>${hasBill ? sym + Number(b.amount).toLocaleString('zh-CN', { minimumFractionDigits: 2 }) : '—'}</strong></dd></div>
+          <div><dt>账单币种</dt><dd>${esc(b.currency || 'CNY')}</dd></div>
+          <div><dt>结算汇率</dt><dd>${rate}</dd></div>
+          <div><dt>折合人民币</dt><dd><strong>${hasBill ? money(b.cny) : '—'}</strong></dd></div>
+          <div><dt>系统实时预估</dt><dd>${money(b.est)}</dd></div>
+          <div><dt>成本差额</dt><dd class="${diff == null ? '' : diffCls(diff)}">${diff == null ? '—' : diffTxt(diff) + (b.est ? '（' + pct(diff / b.est * 100) + '）' : '')}</dd></div>
+          <div><dt>历史差额调整</dt><dd>${adj ? diffTxt(adj) : '—'}</dd></div>
+          <div><dt>实际结算金额</dt><dd><strong>${hasBill ? money(b.cny + adj) : '—'}</strong></dd></div>
+        </dl>
+        ${hasBill ? `<div class="sp-sub-title" style="margin-top:18px">渠道对账明细 <span>按预估成本占比拆分，合计 ${money(b.cny)}</span></div>
+        <table class="sp-subtable">
+          <thead><tr><th>渠道</th><th class="num">系统预估</th><th class="num">对账分摊</th><th class="num">差额</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>` : `<div class="sp-empty" style="margin-top:18px"><strong>账单尚未录入</strong><p>录入供应商对账单金额后，可在此核对逐渠道差异。</p></div>`}
+        <p class="sp-hint" style="margin-top:14px">对账单仅用于核对金额与差异，不会改动账单数据。如需调整请使用「修正账单」生成新版本。</p>
       </div>
     </aside>`;
     drawer.classList.add('open');

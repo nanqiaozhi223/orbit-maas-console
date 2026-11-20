@@ -233,9 +233,13 @@
 .sp-drawer-body{flex:1;overflow:auto;padding:16px 22px 24px}
 
 /* 回执/提示 */
-.sp-toast{position:fixed;left:50%;bottom:34px;transform:translate(-50%,14px);z-index:200;padding:10px 18px;border-radius:999px;background:#273246;color:#fff;font-size:12px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;max-width:calc(100vw - 40px)}
+.sp-toast{position:fixed;left:50%;top:22px;transform:translate(-50%,-14px);z-index:200;display:inline-flex;align-items:center;gap:10px;padding:12px 18px;border:1px solid rgba(148,163,184,.3);border-radius:999px;background:color-mix(in srgb,var(--ui-surface-start) 94%,transparent);box-shadow:0 12px 32px rgba(15,23,42,.18);backdrop-filter:blur(14px);color:var(--ui-text);font-size:12px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s;max-width:calc(100vw - 40px)}
 .sp-toast.show{opacity:1;transform:translate(-50%,0)}
 .sp-toast.err{background:#b91c1c}
+.sp-toast.loading{border-color:rgba(132,204,22,.42);color:var(--ui-text-strong)}
+.sp-toast-spinner{width:14px;height:14px;flex:none;border:2px solid rgba(132,204,22,.25);border-top-color:var(--ui-brand-strong);border-radius:50%;animation:sp-toast-spin .8s linear infinite}
+@keyframes sp-toast-spin{to{transform:rotate(360deg)}}
+.sp-allocation-empty{display:flex;min-height:280px;flex-direction:column;align-items:center;justify-content:center;gap:10px;border:1px dashed var(--ui-border);border-radius:18px;background:linear-gradient(145deg,var(--ui-surface-start),var(--ui-surface-end));text-align:center;color:var(--ui-text-muted)}.sp-allocation-empty strong{color:var(--ui-text-strong);font-size:15px}.sp-allocation-empty p{margin:0;font-size:12px}.sp-allocation-spinner{width:30px;height:30px;border:3px solid color-mix(in srgb,var(--ui-brand-strong) 22%,transparent);border-top-color:var(--ui-brand-strong);border-radius:50%;animation:sp-toast-spin .8s linear infinite}
 
 @media(max-width:1200px){
   .sp-stats,.sp-stats.five{grid-template-columns:repeat(2,minmax(0,1fr))}
@@ -277,7 +281,7 @@
 .sp-sub-empty{padding:14px 18px;font-size:12px;color:var(--ui-text-muted)}
 
 /* 录入账单 / 成本分摊弹窗 */
-.sp-bill-dialog{width:min(1120px,calc(100vw - 48px));max-width:1120px;max-height:calc(100vh - 56px);padding:0;border:1px solid var(--ui-border);border-radius:22px;background:var(--ui-surface-start);color:var(--ui-text);box-shadow:0 30px 70px rgba(15,23,42,.3);overflow:hidden}
+.sp-bill-dialog{width:min(900px,calc(100vw - 48px));max-width:900px;height:min(700px,calc(100vh - 56px));max-height:700px;padding:0;border:1px solid var(--ui-border);border-radius:22px;background:var(--ui-surface-start);color:var(--ui-text);box-shadow:0 30px 70px rgba(15,23,42,.3);overflow:hidden}
 .sp-bill-dialog::backdrop{background:rgba(15,23,42,.45);backdrop-filter:blur(4px)}
 .sp-bill-dialog[open]{display:flex}
 .sp-bill-dialog-body{display:flex;flex-direction:column;width:100%;max-height:calc(100vh - 56px)}
@@ -290,6 +294,8 @@
 .sp-bill-dialog .sp-steps{margin-top:0;margin-bottom:16px}
 .sp-bill-dialog .sp-footbar{position:sticky;bottom:0;margin:16px -24px 0;padding:14px 24px 18px;background:transparent;border:0;border-top:0;backdrop-filter:none}
 .sp-bill-dialog .sp-bill-layout{grid-template-columns:minmax(0,1fr) 300px}
+.sp-bill-dialog .sp-section{background:transparent;border:0;box-shadow:none;padding:8px 0}
+.sp-bill-dialog .sp-footbar{justify-content:flex-end}
 @media(max-width:900px){.sp-bill-dialog{width:calc(100vw - 16px)}.sp-bill-dialog .sp-bill-layout{grid-template-columns:1fr}}
 
 /* 列头筛选图标与浮层 */
@@ -320,3 +326,28 @@
 .sp-alloc-toggle{width:44px;text-align:right}
 .sp-alloc-toggle .sp-expand{margin-left:auto}
 .sp-subtable .num{text-align:right;font-variant-numeric:tabular-nums}
+
+/* 渠道内模型价格对比：展开区可横向滚动，避免挤压外层表格 */
+.sp-sub-wrap{overflow-x:auto}
+.sp-subrow .sp-subtable{min-width:760px}
+.sp-drawer-body .sp-subtable{min-width:0}
+.sp-drawer-body .sp-subtable th,
+.sp-drawer-body .sp-subtable td{padding:8px 10px}
+
+/* 展开列前置：箭头靠左，紧贴渠道名 */
+.sp-allocation-table .sp-alloc-toggle,
+.sp-alloc-toggle:first-child{width:44px;text-align:left;padding-right:0}
+.sp-alloc-toggle:first-child .sp-expand{margin-left:0}
+
+/* 展开列的表头是空占位，不需要灰色底 */
+.sp-table > thead > tr > th.sp-alloc-toggle-head{background:transparent;box-shadow:none}
+
+/* 对账单抽屉：4 列表格按固定比例压缩，避免超出 560px 抽屉 */
+.sp-drawer-body .sp-subtable{table-layout:fixed;width:100%;min-width:0;font-size:11.5px}
+.sp-drawer-body .sp-subtable th:first-child,
+.sp-drawer-body .sp-subtable td:first-child{width:40%;word-break:break-all}
+.sp-drawer-body .sp-subtable th:not(:first-child),
+.sp-drawer-body .sp-subtable td:not(:first-child){width:20%}
+
+/* 账单月份选择：胶囊圆角 */
+.sp-month input{border-radius:999px;padding:0 16px}

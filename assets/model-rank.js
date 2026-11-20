@@ -29,7 +29,8 @@
         <span class="square-rank-stat-meta">最近 10 分钟有调用记录</span>
       </div>
     </div>
-    <img class="square-rank-illustration" src="assets/square-rank-art.png" alt="" aria-hidden="true" />
+    <img class="square-rank-illustration square-rank-illustration-light" src="assets/square-rank-art.png" alt="" aria-hidden="true" />
+    <img class="square-rank-illustration square-rank-illustration-dark" src="assets/model-availability-illustration.png" alt="" aria-hidden="true" />
   </section>`);
 
   const rank = root.querySelector('.square-rank');
