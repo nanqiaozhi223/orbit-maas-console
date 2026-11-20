@@ -260,7 +260,7 @@
   .sp-footbar .right{justify-content:flex-end}
 }
 .sp-toolbar [data-act="add"]{margin-left:auto}
-.sp-primary{height:38px}.sp-toolbar [data-act="reset-filter"]{border-radius:99px}.sp-actions button.more-dots span{font-size:13px;letter-spacing:1px;line-height:1}.sp-actions button.more-dots{font-weight:700}
+.sp-primary{height:38px}.sp-toolbar [data-act="reset-filter"]{border-radius:99px}.sp-actions button.more-dots span{font-size:10px;letter-spacing:.5px;line-height:1;display:block}.sp-actions button.more-dots{font-weight:700}
 #supplierNav .nav-chevron{margin-left:auto;width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:1.8;transition:transform .2s}#supplierNav[aria-expanded="true"] .nav-chevron{transform:rotate(180deg)}
 
 /* 渠道行内展开：关联模型 */
@@ -351,3 +351,18 @@
 
 /* 账单月份选择：胶囊圆角 */
 .sp-month input{border-radius:999px;padding:0 16px}
+
+/* 账单行三点菜单 */
+.sp-more{display:inline-flex;align-items:center;justify-content:center;width:28px;height:28px;padding:0;border-radius:8px;letter-spacing:.5px;font-size:10px;font-weight:700;line-height:1}
+.sp-bill-menu{min-width:136px}
+.sp-bill-menu button{padding:8px 12px;font-size:12.5px}
+.sp-bill-menu{min-width:140px}
+
+/* 详情页基础资料标题行 + 编辑入口 */
+.sp-panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+.sp-panel-head h2{margin:0!important}
+.sp-edit-btn{height:30px;padding:0 14px;font-size:12px;border-radius:999px}
+
+/* 操作列：表头与操作按钮统一左对齐 */
+.sp-table th.sp-sticky-r{text-align:left}
+.sp-table td.sp-sticky-r .sp-actions{justify-content:flex-start}

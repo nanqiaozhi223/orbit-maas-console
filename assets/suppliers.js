@@ -233,7 +233,7 @@
             <th>供应商类型 <button type="button" class="sp-filter${st.type !== 'all' ? ' on' : ''}" data-spfilter="type" aria-label="筛选供应商类型" aria-haspopup="true"><svg viewBox="0 0 1024 1024" aria-hidden="true"><path d="M975.961 63.04A101.347 101.347 0 0 0 879.865 0.026H141.553a101.872 101.872 0 0 0-71.94 173.813l337.649 323.996v322.42a44.11 44.11 0 0 0 12.602 30.982l106.65 106.65a44.11 44.11 0 0 0 62.36 0l106.65-106.65a44.11 44.11 0 0 0 12.6-30.982V497.835l337.65-323.996a101.35 101.35 0 0 0-59.813-110.8z" fill="currentColor"/></svg></button></th>
             <th class="num">关联渠道</th><th class="num">关联模型</th>
             <th>启用状态 <button type="button" class="sp-filter${st.enabled !== 'all' ? ' on' : ''}" data-spfilter="enabled" aria-label="筛选启用状态" aria-haspopup="true"><svg viewBox="0 0 1024 1024" aria-hidden="true"><path d="M975.961 63.04A101.347 101.347 0 0 0 879.865 0.026H141.553a101.872 101.872 0 0 0-71.94 173.813l337.649 323.996v322.42a44.11 44.11 0 0 0 12.602 30.982l106.65 106.65a44.11 44.11 0 0 0 62.36 0l106.65-106.65a44.11 44.11 0 0 0 12.6-30.982V497.835l337.65-323.996a101.35 101.35 0 0 0-59.813-110.8z" fill="currentColor"/></svg></button></th>
-            <th class="sp-sticky-r" style="text-align:right">操作</th>
+            <th class="sp-sticky-r" style="text-align:left">操作</th>
           </tr></thead>
           <tbody>${rows.map(rowHTML).join('')}</tbody>
         </table>
@@ -263,7 +263,6 @@
       <td>${s.enabled ? badge('已启用', 'ok') : badge('已禁用', 'off')}</td>
       <td class="sp-sticky-r"><div class="sp-actions">
         <button data-act="detail" data-id="${s.id}">详情</button>
-        <button data-act="edit" data-id="${s.id}">编辑</button>
         <button class="icon more-dots" data-act="more" data-id="${s.id}" aria-label="${esc(s.name)} 更多操作"><span aria-hidden="true">•••</span></button>
       </div></td>
     </tr>`;
@@ -302,7 +301,7 @@
 
   function basicTab(s) {
     const rate = s.currency === 'CNY' ? '1.0000（本币固定）' : `${Number(s.rate).toFixed(4)}`;
-    return `<h2>基础资料</h2>
+    return `<div class="sp-panel-head"><h2>基础资料</h2><button class="sp-ghost sp-edit-btn" data-act="edit" data-id="${s.id}">编辑</button></div>
     <dl class="sp-dl">
       <div><dt>供应商名称</dt><dd>${esc(s.name)}</dd></div>
       <div><dt>供应商 ID</dt><dd>${esc(s.id)}</dd></div>
@@ -505,7 +504,7 @@
           <thead><tr>
             <th class="sp-sticky-l">供应商名称</th><th>账单月份</th><th class="num">渠道数量</th><th>结算状态 <button type="button" class="sp-filter${st.bstatus !== 'all' ? ' on' : ''}" data-spfilter="status" aria-label="筛选结算状态" aria-haspopup="true"><svg viewBox="0 0 1024 1024" aria-hidden="true"><path d="M975.961 63.04A101.347 101.347 0 0 0 879.865 0.026H141.553a101.872 101.872 0 0 0-71.94 173.813l337.649 323.996v322.42a44.11 44.11 0 0 0 12.602 30.982l106.65 106.65a44.11 44.11 0 0 0 62.36 0l106.65-106.65a44.11 44.11 0 0 0 12.6-30.982V497.835l337.65-323.996a101.35 101.35 0 0 0-59.813-110.8z" fill="currentColor"/></svg></button></th><th class="num">实时预估金额</th>
             <th class="num">原币账单金额 <button type="button" class="sp-filter${st.bcurrency !== 'all' ? ' on' : ''}" data-spfilter="currency" aria-label="筛选币种" aria-haspopup="true"><svg viewBox="0 0 1024 1024" aria-hidden="true"><path d="M975.961 63.04A101.347 101.347 0 0 0 879.865 0.026H141.553a101.872 101.872 0 0 0-71.94 173.813l337.649 323.996v322.42a44.11 44.11 0 0 0 12.602 30.982l106.65 106.65a44.11 44.11 0 0 0 62.36 0l106.65-106.65a44.11 44.11 0 0 0 12.6-30.982V497.835l337.65-323.996a101.35 101.35 0 0 0-59.813-110.8z" fill="currentColor"/></svg></button></th><th class="num">结算汇率</th><th class="num">当月实际金额</th><th class="num">历史差额调整</th>
-            <th class="num">实际结算金额</th><th class="num">成本差额</th><th class="num">差异率</th><th class="sp-sticky-r" style="text-align:right">操作</th>
+            <th class="num">实际结算金额</th><th class="num">成本差额</th><th class="num">差异率</th><th class="sp-sticky-r" style="text-align:left">操作</th>
           </tr></thead>
           <tbody>${list.map(billRowHTML).join('')}</tbody>
         </table>
@@ -522,10 +521,9 @@
     const diff = b.cny == null ? null : b.cny - b.est;
     const rate = b.currency === 'CNY' ? '1.0000' : Number(b.rate).toFixed(4);
     const chs = channelsOf(s).length;
-    const stmt = `<button data-act="bill-statement" data-id="${b.id}">对账单</button>`;
-    const ops = b.status === 'pending' ? `<button data-act="bill-detail" data-id="${b.id}">详情</button>${stmt}<button data-act="bill-create" data-id="${s.id}" data-bill="${b.id}">录入账单</button>`
-      : b.status === 'draft' ? `<button data-act="bill-detail" data-id="${b.id}">详情</button>${stmt}`
-        : `<button data-act="bill-detail" data-id="${b.id}">详情</button>${stmt}<button data-act="bill-fix" data-id="${b.id}">修正账单</button>`;
+    const more = `<button class="sp-more" data-act="bill-more" data-id="${b.id}" aria-haspopup="menu" aria-expanded="false" aria-label="${esc(s.name)} ${monthText(b.month)} 更多操作">•••</button>`;
+    const ops = b.status === 'pending' ? `<button data-act="bill-detail" data-id="${b.id}">详情</button><button data-act="bill-create" data-id="${s.id}" data-bill="${b.id}">录入账单</button>${more}`
+      : `<button data-act="bill-detail" data-id="${b.id}">详情</button>${more}`;
     return `<tr>
       <td class="sp-sticky-l"><div class="sp-name">${logo(s)}<div><button data-act="detail" data-id="${s.id}"><b>${esc(s.name)}</b></button><small>${esc(s.id)}</small></div></div></td>
       <td>${monthText(b.month)}</td>
@@ -838,6 +836,36 @@
     return [['all', '全部'], ['true', '已启用'], ['false', '已禁用']];
   }
 
+  function openBillMenu(btn, id) {
+    document.querySelectorAll('.sp-bill-menu').forEach(x => x.remove());
+    const b = billOf(id); if (!b) return;
+    const items = [['statement', '对账单']];
+    if (b.status === 'settled') items.push(['fix', '修正账单']);
+    const pop = document.createElement('div');
+    pop.className = 'sp-menu sp-bill-menu';
+    pop.setAttribute('role', 'menu');
+    pop.innerHTML = items.map(([v, l]) => `<button type="button" role="menuitem" data-v="${v}">${l}</button>`).join('');
+    document.body.appendChild(pop);
+    const r = btn.getBoundingClientRect();
+    pop.style.top = `${r.bottom + 6}px`;
+    pop.style.left = `${Math.min(r.left, window.innerWidth - pop.offsetWidth - 12)}px`;
+    btn.setAttribute('aria-expanded', 'true');
+    const close = () => {
+      pop.remove();
+      btn.setAttribute('aria-expanded', 'false');
+      document.removeEventListener('click', onDoc, true);
+    };
+    const onDoc = e => { if (!pop.contains(e.target) && e.target !== btn) close(); };
+    pop.addEventListener('click', e => {
+      const t = e.target.closest('[data-v]');
+      if (!t) return;
+      close();
+      if (t.dataset.v === 'statement') openStatement(id);
+      else startFix(id);
+    });
+    setTimeout(() => document.addEventListener('click', onDoc, true), 0);
+  }
+
   let spFilterCloser = null;
   function openColumnFilter(btn) {
     document.querySelectorAll('.sp-filter-pop').forEach(x => x.remove());
@@ -938,6 +966,7 @@
           case 'bill-create': openBillEntry(id, el.dataset.bill); return;
           case 'bill-detail': st.billId = id; st.view = 'billDetail'; st.bdTab = 'info'; render(); window.scrollTo({ top: 0 }); return;
           case 'bill-statement': openStatement(id); return;
+          case 'bill-more': openBillMenu(el, id); return;
           case 'back-settlement':
             if (st.billOpen) { st.billOpen = false; st.draft = null; render(); return; }
             st.view = 'settlement'; render(); return;
@@ -1021,7 +1050,7 @@
     const s = supOf(id);
     menuEl = document.createElement('div');
     menuEl.className = 'sp-menu';
-    menuEl.innerHTML = `<button data-menu="toggle">${s.enabled ? '禁用供应商' : '启用供应商'}</button><button data-menu="bills">查看月度账单</button><button data-menu="delete" class="danger">删除供应商</button>`;
+    menuEl.innerHTML = `<button data-menu="toggle">${s.enabled ? '禁用供应商' : '启用供应商'}</button><button data-menu="delete" class="danger">删除供应商</button>`;
     document.body.appendChild(menuEl);
     const r = btn.getBoundingClientRect(), w = menuEl.offsetWidth, h = menuEl.offsetHeight;
     menuEl.style.left = Math.max(8, Math.min(r.right - w, window.innerWidth - w - 8)) + 'px';
@@ -1054,43 +1083,33 @@
     const dlg = document.createElement('dialog');
     dlg.className = 'sp-dialog';
     dlg.innerHTML = `<form id="spSupplierForm" novalidate>
-      <div class="sp-dialog-head"><div><h2>${isEdit ? '编辑供应商' : '新增供应商'}</h2><p>${isEdit ? '修改基础信息与默认结算配置。' : '先创建供应商档案，创建后可继续关联渠道。'}</p></div><button type="button" class="sp-dialog-close" data-close>×</button></div>
+      <div class="sp-dialog-head"><div><h2>${isEdit ? '编辑供应商' : '新增供应商'}</h2><p>${isEdit ? `修改基础信息与默认结算配置 · ${esc(s.id)}${s.createdAt ? ' · 创建于 ' + esc(s.createdAt) : ''}` : '先创建供应商档案，创建后可继续关联渠道。'}</p></div><button type="button" class="sp-dialog-close" data-close>×</button></div>
       <div class="sp-dialog-body">
         <div class="sp-form">
           <label class="req">供应商名称<input name="name" value="${esc(s?.name || '')}" maxlength="40" placeholder="例如：智谱 AI" /></label>
           <label>供应商类型<select name="type">${Object.entries(TYPE).map(([k, v]) => `<option value="${k}"${s?.type === k ? ' selected' : ''}>${v}</option>`).join('')}</select></label>
-          <label>官网地址<input name="site" value="${esc(s?.site || '')}" placeholder="https://" /></label>
+          <label>官网地址<input name="site" value="${esc(s?.site && s.site !== '—' ? s.site : '')}" placeholder="https://" /></label>
           <label>内部负责人<input name="owner" value="${esc(s?.owner || '')}" placeholder="人员姓名" /></label>
           <label>联系方式<input name="contact" value="${esc(s?.contact || '')}" placeholder="邮箱或电话" /></label>
           <label>结算方式<select name="method">${['按量计费', '预充值', '包月', '内部结算'].map(v => `<option value="${v}"${s?.method === v ? ' selected' : ''}>${v}</option>`).join('')}</select></label>
           <label class="wide">供应商描述<textarea name="desc" placeholder="补充服务范围、注意事项">${esc(s?.desc || '')}</textarea></label>
-          <label>默认账单币种<select name="currency">${Object.keys(CURRENCY).map(k => `<option value="${k}"${(s?.currency || 'CNY') === k ? ' selected' : ''}>${k} · ${CURRENCY[k].name}</option>`).join('')}</select></label>
-          <label>默认结算汇率<input name="rate" type="number" min="0" step="0.0001" value="${s?.currency === 'CNY' ? 1 : (s?.rate ?? 1)}" /><div class="sp-hint" id="spFxHint"></div><span class="sp-field-error">汇率需大于 0</span></label>
         </div>
       </div>
       <div class="sp-dialog-foot"><button type="button" class="sp-ghost" data-close>取消</button><button type="submit" class="sp-primary">${isEdit ? '保存修改' : '确认创建'}</button></div>
     </form>`;
     document.body.appendChild(dlg);
     const f = dlg.querySelector('#spSupplierForm');
-    const curSel = f.currency, rateInp = f.rate, hint = dlg.querySelector('#spFxHint');
-    const syncFx = () => {
-      const isCny = curSel.value === 'CNY';
-      rateInp.disabled = isCny; if (isCny) rateInp.value = 1;
-      hint.textContent = isCny ? '本币账单汇率固定为 1.0000' : `1 ${curSel.value} = ${Number(rateInp.value || 0).toFixed(4)} CNY`;
-    };
-    syncFx();
-    curSel.addEventListener('change', syncFx);
-    rateInp.addEventListener('input', syncFx);
+    const rateInp = { value: 1 };
     dlg.querySelectorAll('[data-close]').forEach(b => b.onclick = () => dlg.close());
     dlg.addEventListener('close', () => dlg.remove());
     f.onsubmit = e => {
       e.preventDefault();
-      const name = f.name.value.trim();
+      const name = f.querySelector('[name="name"]').value.trim();
       if (!name) { f.name.closest('label').classList.add('invalid'); return; }
       const payload = {
-        name, type: f.type.value, color: f.color.value, site: f.site.value.trim() || '—',
+        name, type: f.type.value, color: s?.color || '', site: f.site.value.trim() || '—',
         owner: f.owner.value.trim(), contact: f.contact.value.trim(), desc: f.desc.value.trim(),
-        settle: f.settle.checked, currency: f.currency.value, rate: Number(f.rate.value || 1), method: f.method.value
+        settle: s?.settle ?? true, currency: 'CNY', rate: 1, method: f.querySelector('[name="method"]').value
       };
       if (payload.settle && !(payload.rate > 0)) { rateInp.closest('label').classList.add('invalid'); return; }
       if (payload.currency === 'CNY') payload.rate = 1;
