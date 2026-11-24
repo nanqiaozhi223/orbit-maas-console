@@ -231,3 +231,53 @@
   :root[data-theme="dark"] .api-page .api-table .key-actions{background:var(--ui-surface-end)!important;box-shadow:-10px 0 14px -12px rgba(0,0,0,.6)}
   :root[data-theme="dark"] .api-page .api-table thead th.key-actions{background:#1b2230!important}
 }
+
+/* 自定义模型池：搜索 + 全选 */
+.pool-tools{display:flex;align-items:center;gap:12px;margin:12px 0 10px}
+.pool-search{position:relative;flex:0 1 50%;max-width:50%;min-width:200px;display:flex;align-items:center}
+.pool-search svg{position:absolute;left:11px;width:13px;height:13px;fill:none;stroke:#94a3b8;stroke-width:2;stroke-linecap:round;pointer-events:none}
+.pool-search input{width:100%;height:32px;padding:0 12px 0 30px;border:1px solid #dbe3d1;border-radius:999px;background:transparent;color:var(--ui-text-strong);font:inherit;font-size:12px;font-weight:300;transition:border-color .15s,box-shadow .15s}
+.pool-search input::placeholder{color:#a8b3c2}
+.pool-search input:focus{outline:none;border-color:#a3c46a;box-shadow:0 0 0 3px rgba(132,204,22,.14)}
+.pool-search input::-webkit-search-cancel-button{-webkit-appearance:none}
+.pool-master{display:inline-flex;align-items:center;gap:6px;margin-left:auto;padding:0;border:0;background:transparent;font-size:12px;font-weight:400;color:var(--ui-text-muted);cursor:pointer;white-space:nowrap}
+.pool-master input{width:14px;height:14px;accent-color:#84cc16}
+.pool-item[hidden]{display:none}
+.pool-empty{margin-top:8px;padding:16px;text-align:center;color:#94a3b8;font-size:12px}
+:root[data-theme="dark"] .pool-search input{border-color:#303a4d;color:#e2e8f0}
+:root[data-theme="dark"] .pool-master{color:#aab4c4}
+:root[data-theme="dark"] .pool-empty{color:#7c8899}
+
+/* 自定义模型池：标题行与面板合并为一整块背景，避免接缝 */
+.pool-group{margin-top:12px;border:1px solid transparent;border-radius:14px;background:transparent;transition:background .18s,border-color .18s}
+.pool-group.open{background:rgba(255,255,255,.55);border-color:#dbe3d1}
+.pool-group .pool-toggle{margin-top:0;border:0;background:transparent;border-radius:14px}
+.pool-group .pool-toggle[aria-checked="true"]{border:0;border-radius:14px 14px 0 0;background:transparent}
+.pool-group .pool-panel{margin-top:0;border:0;border-radius:0 0 14px 14px;background:transparent}
+:root[data-theme="dark"] .pool-group.open{background:rgba(23,30,43,.7);border-color:#303a4d}
+
+/* 指定模型：标题移到矩形框外左上角 */
+#keyModal #lockedModelField{position:relative;margin-top:34px}
+#keyModal #lockedModelField legend{position:absolute;top:-26px;left:0;margin:0;padding:0;font-size:13px;font-weight:700;color:var(--ui-text);background:transparent}
+#keyModal #lockedGrid{grid-template-columns:repeat(2,minmax(0,1fr))}
+#keyModal #lockedGrid .locked-model-item[hidden]{display:none}
+
+/* 指定模型里的搜索框：抵消 #keyModal .form-field input 的默认外观 */
+#keyModal .pool-search input{height:32px;min-height:32px;padding:0 12px 0 32px;border:1px solid #dbe3d1;border-radius:999px;background:transparent;box-shadow:none;font-size:12px;font-weight:300}
+#keyModal .pool-search input:focus{outline:none;border-color:#a3c46a;box-shadow:0 0 0 3px rgba(132,204,22,.14)}
+.pool-group[hidden]{display:none}
+
+/* 指定模型工具条与模型池保持一致：抵消 form-field 对复选框的放大 */
+#keyModal .form-field .pool-master{display:inline-flex;align-items:center;gap:6px;height:32px;padding:0;border:0;background:transparent;font-size:12px;color:var(--ui-text-muted);cursor:pointer}
+#keyModal .form-field .pool-master input{width:14px;height:14px;min-height:0;padding:0;margin:0;border:0;border-radius:3px;background:transparent;box-shadow:none;accent-color:#84cc16}
+
+/* 指定模型：工具条上下间距收紧 */
+#keyModal .locked-model-field .pool-tools{margin:4px 0 8px}
+#keyModal .locked-model-field>.locked-quota-hint{margin:0 0 8px}
+
+/* 自定义模型池：工具条上下间距同样收紧 */
+#poolPanel .pool-tools{margin:8px 0 6px}
+
+/* 私有化模型：工具条并入模型框内部顶端 */
+#keyModal #bizGrid>.pool-tools{grid-column:1/-1;margin:0 0 2px;padding-bottom:0;border-bottom:0}
+#keyModal #bizGrid{padding-top:12px}
